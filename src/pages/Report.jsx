@@ -123,11 +123,11 @@ export default function Report() {
 
             {/* Report Content to be Exported */}
             <div ref={reportRef} className="bg-card rounded-3xl overflow-hidden border border-border shadow-lg relative">
-                <div className="absolute top-0 right-0 w-full h-96 bg-gradient-to-br from-primary/5 to-transparent mix-blend-multiply pointer-events-none" />
+                <div data-html2canvas-ignore="true" className="absolute top-0 right-0 w-full h-96 bg-gradient-to-br from-primary/5 to-transparent mix-blend-multiply pointer-events-none" />
 
                 {/* Header Block */}
                 <div className={`p-10 md:p-16 text-center bg-gradient-to-br ${bgGradient} relative overflow-hidden bg-opacity-20`}>
-                    <div className="absolute inset-0 bg-background/40 backdrop-blur-sm" />
+                    <div data-html2canvas-ignore="true" className="absolute inset-0 bg-background/40 backdrop-blur-sm" />
                     <div className="relative z-10">
                         <div className="inline-block px-4 py-1.5 rounded-full border border-primary/30 bg-background/60 backdrop-blur-md text-foreground text-sm font-bold tracking-widest uppercase mb-6 shadow-sm">
                             Análise Cromática

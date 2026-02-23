@@ -374,7 +374,7 @@ hr.decor {
                 </div>
 
                 {/* Mobile Menu */}
-                <div id="mobile-menu" className="hidden flex-col bg-cream fixed inset-0 z-40 p-8 pt-24 gap-6 items-center text-xl font-serif">
+                <div id="mobile-menu" className="hidden flex-col bg-[#FAF9F6] fixed inset-0 z-40 p-8 pt-24 gap-6 items-center text-xl font-serif">
                     <button className="absolute top-6 right-6 text-ink" onClick={toggleMobileMenu}>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
                     </button>
