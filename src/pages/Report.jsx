@@ -135,7 +135,7 @@ export default function Report() {
                         <h1 className="text-4xl md:text-6xl font-heading font-bold text-foreground mb-4 leading-tight">
                             {report.sub_season}
                         </h1>
-                        <p className="text-xl text-slate-700 font-bold mb-8 font-heading italic">
+                        <p className="text-xl text-foreground/80 font-bold mb-8 font-heading italic">
                             "{report.subject_name}"
                         </p>
                     </div>
@@ -157,7 +157,7 @@ export default function Report() {
                     <section>
                         <div className="text-center mb-10">
                             <h3 className="text-3xl font-heading font-bold text-foreground">A Tua Paleta Estrela</h3>
-                            <p className="text-slate-600 mt-2 font-bold">Cores que harmonizam perfeitamente com a sua tez.</p>
+                            <p className="text-muted-foreground mt-2 font-bold">Cores que harmonizam perfeitamente com a sua tez.</p>
                         </div>
                         <div className="flex flex-wrap justify-center gap-8 md:gap-12">
                             {(report.palette || []).map((color, idx) => (
@@ -170,7 +170,7 @@ export default function Report() {
                     <section className="bg-secondary/30 rounded-2xl p-8 md:p-12 border border-border">
                         <div className="text-center mb-10">
                             <h3 className="text-2xl font-heading font-bold text-destructive">Cores a Evitar</h3>
-                            <p className="text-slate-600 mt-2 text-sm font-bold">Tons que podem apagar a sua luminosidade natural.</p>
+                            <p className="text-muted-foreground mt-2 text-sm font-bold">Tons que podem apagar a sua luminosidade natural.</p>
                         </div>
                         <div className="flex flex-wrap justify-center gap-6 md:gap-10">
                             {(report.colors_to_avoid || []).map((color, idx) => (
@@ -187,9 +187,9 @@ export default function Report() {
                             </div>
                             <h3 className="font-heading font-bold text-xl mb-4 text-foreground">Vestuário</h3>
                             <div className="text-sm text-left space-y-3 w-full">
-                                <p><strong className="text-foreground">Sugestões:</strong> <span className="text-slate-600 font-medium">{report.clothing?.suggestions}</span></p>
-                                <p><strong className="text-foreground">Tecidos:</strong> <span className="text-slate-600 font-medium">{report.clothing?.fabrics}</span></p>
-                                <p><strong className="text-foreground">Padrões:</strong> <span className="text-slate-600 font-medium">{report.clothing?.patterns}</span></p>
+                                <p><strong className="text-foreground">Sugestões:</strong> <span className="text-muted-foreground font-medium">{report.clothing?.suggestions}</span></p>
+                                <p><strong className="text-foreground">Tecidos:</strong> <span className="text-muted-foreground font-medium">{report.clothing?.fabrics}</span></p>
+                                <p><strong className="text-foreground">Padrões:</strong> <span className="text-muted-foreground font-medium">{report.clothing?.patterns}</span></p>
                             </div>
                         </div>
 
@@ -199,10 +199,10 @@ export default function Report() {
                             </div>
                             <h3 className="font-heading font-bold text-xl mb-4 text-foreground">Maquilhagem</h3>
                             <div className="text-sm text-left space-y-3 w-full">
-                                <p><strong className="text-foreground">Base:</strong> <span className="text-slate-600 font-medium">{report.makeup?.foundation}</span></p>
-                                <p><strong className="text-foreground">Blush:</strong> <span className="text-slate-600 font-medium">{report.makeup?.blush}</span></p>
-                                <p><strong className="text-foreground">Lábios:</strong> <span className="text-slate-600 font-medium">{report.makeup?.lips}</span></p>
-                                <p><strong className="text-foreground">Olhos:</strong> <span className="text-slate-600 font-medium">{report.makeup?.eyes}</span></p>
+                                <p><strong className="text-foreground">Base:</strong> <span className="text-muted-foreground font-medium">{report.makeup?.foundation}</span></p>
+                                <p><strong className="text-foreground">Blush:</strong> <span className="text-muted-foreground font-medium">{report.makeup?.blush}</span></p>
+                                <p><strong className="text-foreground">Lábios:</strong> <span className="text-muted-foreground font-medium">{report.makeup?.lips}</span></p>
+                                <p><strong className="text-foreground">Olhos:</strong> <span className="text-muted-foreground font-medium">{report.makeup?.eyes}</span></p>
                             </div>
                         </div>
 
@@ -212,9 +212,9 @@ export default function Report() {
                             </div>
                             <h3 className="font-heading font-bold text-xl mb-4 text-foreground">Acessórios</h3>
                             <div className="text-sm text-left space-y-3 w-full">
-                                <p><strong className="text-foreground">Metais:</strong> <span className="text-slate-600 font-medium">{report.accessories?.metals}</span></p>
-                                <p><strong className="text-foreground">Pedras:</strong> <span className="text-slate-600 font-medium">{report.accessories?.stones}</span></p>
-                                <p><strong className="text-foreground">Geral:</strong> <span className="text-slate-600 font-medium">{report.accessories?.general}</span></p>
+                                <p><strong className="text-foreground">Metais:</strong> <span className="text-muted-foreground font-medium">{report.accessories?.metals}</span></p>
+                                <p><strong className="text-foreground">Pedras:</strong> <span className="text-muted-foreground font-medium">{report.accessories?.stones}</span></p>
+                                <p><strong className="text-foreground">Geral:</strong> <span className="text-muted-foreground font-medium">{report.accessories?.general}</span></p>
                             </div>
                         </div>
                     </section>
@@ -222,7 +222,7 @@ export default function Report() {
                     {/* Footer Logo of Report */}
                     <div className="pt-12 pb-4 text-center border-t border-border">
                         <span className="text-xl font-heading font-bold tracking-widest uppercase text-foreground">ChromaTest AI</span>
-                        <p className="text-xs text-slate-500 mt-2 font-bold tracking-tight">© {new Date().getFullYear()} — Todos os direitos reservados</p>
+                        <p className="text-xs text-muted-foreground mt-2 font-bold tracking-tight">© {new Date().getFullYear()} — Todos os direitos reservados</p>
                     </div>
                 </div>
             </div>
