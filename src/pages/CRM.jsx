@@ -21,11 +21,14 @@ export default function CRM() {
         const load = async () => {
             if (currentUser) {
                 setLoading(true);
-                await Promise.all([
-                    loadSubjects(currentUser.id),
-                    loadReports(currentUser.id)
-                ]);
-                setLoading(false);
+                try {
+                    await Promise.all([
+                        loadSubjects(currentUser.id),
+                        loadReports(currentUser.id)
+                    ]);
+                } finally {
+                    setLoading(false);
+                }
             }
         };
         load();
@@ -55,7 +58,7 @@ export default function CRM() {
         return matchesSearch && matchesStatus && matchesSeason;
     });
 
-    const availableCredits = (currentUser.credits_total || 0) - (currentUser.credits_used || 0);
+    const availableCredits = (currentUser.creditsTotal || 0) - (currentUser.creditsUsed || 0);
 
     const seasonOptions = ["all", "Primavera", "Verão", "Outono", "Inverno"];
     const statusOptions = ["all", "pending", "processing", "completed", "error"];
@@ -85,7 +88,7 @@ export default function CRM() {
                     </div>
                     <div>
                         <p className="text-sm text-slate-600 font-bold uppercase tracking-tight">Créditos Usados</p>
-                        <p className="text-2xl font-bold">{currentUser.credits_used || 0}</p>
+                        <p className="text-2xl font-bold">{currentUser.creditsUsed || 0}</p>
                     </div>
                 </div>
 
@@ -192,7 +195,7 @@ export default function CRM() {
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 {item.reportId ? (
                                                     <button
-                                                        onClick={() => navigate(`/reports/${item.reportId}`)}
+                                                        onClick={() => navigate(`/reports/${item.id}`)}
                                                         className="inline-flex items-center text-xs font-semibold text-white bg-primary hover:bg-primary/80 shadow-md px-3 py-1.5 rounded-md transition-all active:scale-95"
                                                     >
                                                         Ver Relatório <ArrowUpRight className="w-3 h-3 ml-1" />

@@ -57,9 +57,14 @@ export default function Report() {
 
         try {
             const canvas = await html2canvas(reportRef.current, {
-                scale: 2,
+                scale: 1.5,
                 backgroundColor: "#0F0A1E",
                 useCORS: true,
+                logging: false,
+                onclone: (clonedDoc) => {
+                    const blurs = clonedDoc.querySelectorAll('.backdrop-blur-sm, .backdrop-blur-md');
+                    blurs.forEach(el => el.style.backdropFilter = 'none');
+                }
             });
 
             const imgData = canvas.toDataURL("image/jpeg", 0.95);
@@ -73,7 +78,7 @@ export default function Report() {
             toast.success("PDF exportado com sucesso!", { id: toastId });
         } catch (error) {
             console.error("PDF generation failed:", error);
-            toast.error("Ocorreu um erro ao gerar o PDF.", { id: toastId });
+            toast.error(`Erro ao gerar PDF: ${error?.message || "Desconhecido"}`, { id: toastId });
         }
     };
 

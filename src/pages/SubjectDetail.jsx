@@ -13,14 +13,14 @@ export default function SubjectDetail() {
 
     useEffect(() => {
         if (reports.length > 0) {
-            const report = getBySubject(id);
+            const report = reports.find(r => r.subject_id === id) || reports.find(r => r.id === id);
             if (report) {
-                navigate(`/reports/${report.id}`, { replace: true });
+                navigate(`/reports/${report.subject_id}`, { replace: true });
             } else {
                 navigate('/dashboard');
             }
         }
-    }, [id, reports, navigate, getBySubject]);
+    }, [id, reports, navigate]);
 
     return (
         <div className="flex items-center justify-center min-h-[50vh]">

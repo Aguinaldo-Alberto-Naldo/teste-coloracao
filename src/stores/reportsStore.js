@@ -69,9 +69,11 @@ export const useReportsStore = create(
                     .from('reports')
                     .select('*')
                     .eq('subject_id', subjectId)
-                    .single();
+                    .order('created_at', { ascending: false })
+                    .limit(1)
+                    .maybeSingle();
 
-                if (error && error.code !== 'PGRST116') throw error; // Allow "not found"
+                if (error) throw error;
                 return data;
             } catch (error) {
                 console.error("Error fetching report by subject:", error);
