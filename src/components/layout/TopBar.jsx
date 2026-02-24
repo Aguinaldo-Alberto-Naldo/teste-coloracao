@@ -162,11 +162,15 @@ export default function TopBar({ onMenuClick }) {
                             ? "bg-white/5 border-gold/30 hover:bg-white/10 hover:border-gold/50"
                             : "bg-white/10 border-white/20 hover:bg-white/20 hover:border-white/30"
                             }`}>
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shadow-sm ${isAdmin
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shadow-sm overflow-hidden ${isAdmin
                                 ? "bg-gold text-slate-900"
                                 : "bg-white text-primary"
                                 }`}>
-                                {initial}
+                                {currentUser.avatarUrl ? (
+                                    <img src={currentUser.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                                ) : (
+                                    initial
+                                )}
                             </div>
                             <div className="hidden sm:block text-left mr-1">
                                 <p className={`text-[11px] font-black uppercase tracking-tighter leading-none mb-0.5 ${isAdmin ? "text-gold" : "text-white"}`}>
