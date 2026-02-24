@@ -89,30 +89,46 @@ export const useSubjectsStore = create(
 
         // Delete subject from Supabase
         deleteSubject: async (id) => {
+            const toastId = toast.loading("A eliminar teste...");
             try {
-                // 1. Delete associated reports first if any exist (to avoid foreign key errors)
-                await supabase
+                console.log("Iniciando eliminação do subject:", id);
+
+                // 1. Delete associated reports first if any exist
+                const { error: reportError } = await supabase
                     .from('reports')
                     .delete()
                     .eq('subject_id', id);
 
-                // 2. Delete the subject
+                if (reportError) {
+                    console.error("Erro ao eliminar reports associados:", reportError);
+                    throw reportError;
+                }
+
+                // 2. Delete entries in other potential tables if they exist
+                // Check if there are notifications linked to this subject? (if metadata contains it)
+                // For now, we assume the main constraint is 'reports'
+
+                // 3. Delete the subject
                 const { error } = await supabase
                     .from('subjects')
                     .delete()
                     .eq('id', id);
 
-                if (error) throw error;
+                if (error) {
+                    console.error("Erro ao eliminar subject principal:", error);
+                    throw error;
+                }
 
                 set((state) => ({
                     subjects: state.subjects.filter(s => s.id !== id)
                 }));
 
-                toast.success("Teste eliminado com sucesso.");
+                toast.success("Teste eliminado com sucesso.", { id: toastId });
                 return true;
             } catch (error) {
-                console.error("Error deleting subject:", error);
-                toast.error("Erro ao eliminar teste.");
+                console.error("Erro detalhado na eliminação:", error);
+                const msg = error.message || "Erro desconhecido ao eliminar.";
+                toast.error(`Erro ao eliminar teste: ${msg}`, { id: toastId });
                 return false;
             }
         },
