@@ -5,7 +5,7 @@ import ColorSwatch from "../components/ui/ColorSwatch";
 import AvoidColorSwatch from "../components/ui/AvoidColorSwatch";
 import { Download, MessageCircle, ArrowLeft, Shirt, Brush, Diamond, Loader2 } from "lucide-react";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import { toJpeg } from "html-to-image";
 import { toast } from "sonner";
 
 export default function Report() {
@@ -56,28 +56,35 @@ export default function Report() {
         const toastId = toast.loading("A gerar PDF...");
 
         try {
-            const canvas = await html2canvas(reportRef.current, {
-                scale: 1.5,
+            // Temporary class to remove blurs during export to prevent rendering bugs
+            const exportContainer = reportRef.current;
+            exportContainer.classList.add('exporting-pdf');
+
+            const dataUrl = await toJpeg(exportContainer, {
+                quality: 0.95,
                 backgroundColor: "#0F0A1E",
-                useCORS: true,
-                logging: false,
-                onclone: (clonedDoc) => {
-                    const blurs = clonedDoc.querySelectorAll('.backdrop-blur-sm, .backdrop-blur-md');
-                    blurs.forEach(el => el.style.backdropFilter = 'none');
+                cacheBust: true,
+                pixelRatio: window.devicePixelRatio || 2, // Equivalent to scale: 2
+                filter: (node) => {
+                    // Filter out elements that shouldn't be rendered (e.g., backgrounds that cause issues)
+                    return !node.dataset || node.dataset.html2canvasIgnore !== "true";
                 }
             });
 
-            const imgData = canvas.toDataURL("image/jpeg", 0.95);
+            exportContainer.classList.remove('exporting-pdf');
+
             const pdf = new jsPDF("p", "mm", "a4");
             const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            const imgProps = pdf.getImageProperties(dataUrl);
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-            pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
+            pdf.addImage(dataUrl, "JPEG", 0, 0, pdfWidth, pdfHeight);
             pdf.save(`Colorimetria_${report.subject_name || 'Relatorio'}.pdf`);
 
             toast.success("PDF exportado com sucesso!", { id: toastId });
         } catch (error) {
             console.error("PDF generation failed:", error);
+            if (reportRef.current) reportRef.current.classList.remove('exporting-pdf');
             toast.error(`Erro ao gerar PDF: ${error?.message || "Desconhecido"}`, { id: toastId });
         }
     };
