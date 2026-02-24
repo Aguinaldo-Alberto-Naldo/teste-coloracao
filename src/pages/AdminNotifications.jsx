@@ -6,7 +6,7 @@ import { Send, Users, User, Bell, Loader2, AlertTriangle, CheckCircle2, Info } f
 import { toast } from "sonner";
 
 export default function AdminNotifications() {
-    const { currentUser } = useAuthStore();
+    const { currentUser, fetchAllProfiles } = useAuthStore();
     const { sendNotification } = useNotificationsStore();
 
     const [targetType, setTargetType] = useState("all"); // all, single
@@ -21,23 +21,22 @@ export default function AdminNotifications() {
     const [sending, setSending] = useState(false);
 
     useEffect(() => {
-        const fetchUsers = async () => {
+        const loadUsers = async () => {
             setLoadingUsers(true);
             try {
-                const { data, error } = await supabase
-                    .from('profiles')
-                    .select('id, full_name, email')
-                    .neq('role', 'admin');
-                if (error) throw error;
-                setUsers(data || []);
+                const profiles = await fetchAllProfiles();
+                // Filter out admins and format if needed
+                const clients = profiles.filter(p => p.role !== 'admin');
+                setUsers(clients);
             } catch (err) {
-                console.error(err);
+                console.error("DEBUG Error fetching users for alerts:", err);
+                toast.error("Erro ao carregar lista de usuários.");
             } finally {
                 setLoadingUsers(false);
             }
         };
-        fetchUsers();
-    }, []);
+        loadUsers();
+    }, [fetchAllProfiles]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
