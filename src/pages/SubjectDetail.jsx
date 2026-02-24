@@ -128,8 +128,9 @@ export default function SubjectDetail() {
                 Voltar ao CRM
             </button>
 
-            <div className="glass-card rounded-2xl p-8 border-2 border-destructive/20 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-destructive/10 rounded-full blur-[50px] -translate-y-1/2 translate-x-1/2" />
+            <div className="bg-gradient-to-br from-white via-white to-destructive/5 rounded-[2.5rem] p-8 border border-white/50 shadow-2xl relative overflow-hidden backdrop-blur-sm">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-destructive/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 animate-pulse" />
+                <div className="absolute bottom-0 left-0 w-48 h-48 bg-primary/5 rounded-full blur-[80px] translate-y-1/3 -translate-x-1/4" />
 
                 <div className="flex items-center gap-4 mb-6">
                     <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
@@ -164,10 +165,10 @@ export default function SubjectDetail() {
                     <button
                         onClick={handleRetry}
                         disabled={isRetrying || isDeleting}
-                        className="flex-1 bg-primary hover:bg-primary/90 text-white font-medium py-3 px-4 rounded-xl transition-all shadow-md flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex-1 bg-gradient-to-r from-[#db2777] to-[#4f46e5] hover:scale-[1.02] active:scale-95 text-white font-black py-4 px-6 rounded-2xl shadow-xl shadow-primary/25 transition-all flex items-center justify-center disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed uppercase tracking-wider text-sm"
                     >
                         {isRetrying ? (
-                            <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> A Processar IA...</>
+                            <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> A Processar...</>
                         ) : (
                             <><RefreshCw className="w-5 h-5 mr-2" /> Tentar Novamente</>
                         )}
@@ -175,7 +176,7 @@ export default function SubjectDetail() {
                     <button
                         onClick={handleDelete}
                         disabled={isRetrying || isDeleting}
-                        className="sm:flex-none bg-background hover:bg-destructive/10 text-destructive border border-destructive/20 font-medium py-3 px-6 rounded-xl transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="sm:flex-none bg-white hover:bg-destructive/5 text-destructive border-2 border-destructive/20 hover:border-destructive/40 font-bold py-4 px-8 rounded-2xl transition-all shadow-lg shadow-destructive/5 flex items-center justify-center active:scale-95 disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed uppercase tracking-wider text-sm"
                     >
                         {isDeleting ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Trash2 className="w-5 h-5 mr-2" /> Eliminar</>}
                     </button>

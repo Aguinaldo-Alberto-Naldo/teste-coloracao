@@ -90,6 +90,13 @@ export const useSubjectsStore = create(
         // Delete subject from Supabase
         deleteSubject: async (id) => {
             try {
+                // 1. Delete associated reports first if any exist (to avoid foreign key errors)
+                await supabase
+                    .from('reports')
+                    .delete()
+                    .eq('subject_id', id);
+
+                // 2. Delete the subject
                 const { error } = await supabase
                     .from('subjects')
                     .delete()
