@@ -131,9 +131,9 @@ export default function ClientStore() {
 
                             <button
                                 onClick={() => handlePurchaseClick(pkg)}
-                                className={`w-full py-4 rounded-xl font-bold transition-all ${pkg.isPopular
-                                    ? 'bg-moving-gradient text-white hover:shadow-[0_10px_20px_-5px_rgba(124,58,237,0.4)]'
-                                    : 'bg-secondary hover:bg-muted text-foreground border border-border'
+                                className={`w-full py-4 rounded-xl font-bold transition-all shadow-lg active:scale-95 ${pkg.isPopular
+                                    ? 'bg-moving-gradient text-white shadow-primary/25'
+                                    : 'bg-gradient-to-r from-accent to-primary text-white shadow-accent/20 hover:scale-[1.02]'
                                     }`}
                             >
                                 Adquirir
@@ -272,7 +272,7 @@ export default function ClientStore() {
                             <button
                                 onClick={confirmPurchase}
                                 disabled={isSubmitting || !proofFile}
-                                className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                className="w-full bg-gradient-to-r from-accent to-primary hover:scale-[1.02] active:scale-95 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-accent/20 transition-all disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
                                 {isSubmitting ? (
                                     <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Processando...</>
