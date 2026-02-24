@@ -76,12 +76,20 @@ function PhotoGuidelinesModal({ onConfirm }) {
                     </div>
                 </div>
 
-                <button
-                    onClick={onConfirm}
-                    className="w-full bg-slate-900 hover:bg-black text-white font-black py-5 rounded-2xl shadow-xl shadow-slate-200 transition-all active:scale-[0.98] uppercase tracking-[0.2em] text-sm"
-                >
-                    Entendi, Vamos Começar
-                </button>
+                <div className="space-y-4">
+                    <button
+                        onClick={() => onConfirm(false)}
+                        className="w-full bg-slate-900 hover:bg-black text-white font-black py-5 rounded-2xl shadow-xl shadow-slate-200 transition-all active:scale-[0.98] uppercase tracking-[0.2em] text-sm"
+                    >
+                        Entendi, Vamos Começar
+                    </button>
+                    <button
+                        onClick={() => onConfirm(true)}
+                        className="w-full bg-slate-50 hover:bg-slate-100 text-slate-500 font-bold py-3.5 rounded-xl transition-all text-sm hover:text-slate-700"
+                    >
+                        Não mostrar novamente
+                    </button>
+                </div>
             </div>
         </div>
     );
@@ -116,7 +124,16 @@ export default function NewSubject() {
     const [photos, setPhotos] = useState([]);
     const [isProcessing, setIsProcessing] = useState(false);
     const [showCreditWarning, setShowCreditWarning] = useState(false);
-    const [showGuidelines, setShowGuidelines] = useState(true);
+    const [showGuidelines, setShowGuidelines] = useState(() => {
+        return localStorage.getItem('hide_photo_guidelines') !== 'true';
+    });
+
+    const handleGuidelinesConfirm = (dontShowAgain) => {
+        if (dontShowAgain) {
+            localStorage.setItem('hide_photo_guidelines', 'true');
+        }
+        setShowGuidelines(false);
+    };
 
     // Client selection mode: 'existing' or 'new'
     const [clientMode, setClientMode] = useState('existing');
@@ -396,7 +413,7 @@ export default function NewSubject() {
             {isProcessing && <ProcessingOverlay />}
 
             {showGuidelines && (
-                <PhotoGuidelinesModal onConfirm={() => setShowGuidelines(false)} />
+                <PhotoGuidelinesModal onConfirm={handleGuidelinesConfirm} />
             )}
         </>
     );
