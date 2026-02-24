@@ -286,8 +286,10 @@ export default function NewSubject() {
                     Voltar
                 </button>
 
-                <div className="bg-card shadow-sm border border-border rounded-2xl p-6 md:p-10 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
+                <div className="bg-gradient-to-br from-white via-white to-primary/5 shadow-2xl border border-white/50 rounded-[2.5rem] p-6 md:p-10 relative overflow-hidden backdrop-blur-sm">
+                    {/* Vibrant mesh blobs */}
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 animate-pulse" />
+                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-primary/10 rounded-full blur-[80px] translate-y-1/3 -translate-x-1/4" />
 
                     <h1 className="text-3xl font-heading font-bold mb-2 text-foreground">Nova Análise</h1>
                     <p className="text-muted-foreground text-sm mb-8 max-w-md">
@@ -296,14 +298,14 @@ export default function NewSubject() {
 
                     <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
                         {/* Client Selection Toggle */}
-                        <div className="bg-muted/30 p-2 rounded-xl flex gap-2 w-full max-w-md">
+                        <div className="bg-white/50 backdrop-blur-md p-1.5 rounded-2xl flex gap-1 w-full max-w-md border border-slate-100 shadow-sm">
                             <button
                                 type="button"
                                 disabled={clients.length === 0}
                                 onClick={() => setClientMode('existing')}
-                                className={`flex-1 flex items-center justify-center py-2.5 rounded-lg text-sm font-bold transition-all ${clientMode === 'existing'
-                                    ? 'bg-background shadow text-foreground'
-                                    : 'text-muted-foreground hover:text-foreground disabled:opacity-50 disabled:cursor-not-allowed'
+                                className={`flex-1 flex items-center justify-center py-3 rounded-xl text-sm font-black transition-all uppercase tracking-tight ${clientMode === 'existing'
+                                    ? 'bg-gradient-to-r from-[#db2777] to-[#4f46e5] shadow-lg text-white'
+                                    : 'text-slate-400 hover:text-slate-600 disabled:opacity-30 disabled:cursor-not-allowed'
                                     }`}
                             >
                                 <Users className="w-4 h-4 mr-2" />
@@ -312,9 +314,9 @@ export default function NewSubject() {
                             <button
                                 type="button"
                                 onClick={() => setClientMode('new')}
-                                className={`flex-1 flex items-center justify-center py-2.5 rounded-lg text-sm font-bold transition-all ${clientMode === 'new'
-                                    ? 'bg-background shadow text-foreground'
-                                    : 'text-muted-foreground hover:text-foreground'
+                                className={`flex-1 flex items-center justify-center py-3 rounded-xl text-sm font-black transition-all uppercase tracking-tight ${clientMode === 'new'
+                                    ? 'bg-gradient-to-r from-[#db2777] to-[#4f46e5] shadow-lg text-white'
+                                    : 'text-slate-400 hover:text-slate-600'
                                     }`}
                             >
                                 <UserPlus className="w-4 h-4 mr-2" />
@@ -393,7 +395,7 @@ export default function NewSubject() {
                             </div>
                             <button
                                 type="submit"
-                                className="w-full sm:w-auto inline-flex items-center justify-center bg-primary hover:bg-primary/90 text-primary-foreground font-bold h-12 px-8 rounded-xl shadow-md shadow-primary/20 transition-all tracking-wide"
+                                className="w-full sm:w-auto inline-flex items-center justify-center bg-gradient-to-r from-[#db2777] to-[#4f46e5] hover:scale-[1.02] active:scale-95 text-white font-black h-14 px-10 rounded-2xl shadow-xl shadow-primary/25 transition-all tracking-[0.05em] uppercase text-sm"
                             >
                                 Analisar Agora
                             </button>

@@ -173,11 +173,11 @@ export default function TopBar({ onMenuClick }) {
                                 )}
                             </div>
                             <div className="hidden sm:block text-left mr-1">
-                                <p className={`text-[11px] font-black uppercase tracking-tighter leading-none mb-0.5 ${isAdmin ? "text-gold" : "text-white"}`}>
-                                    {isAdmin ? "Admin" : "Cliente"}
-                                </p>
-                                <p className={`text-[10px] font-medium leading-none ${isAdmin ? "text-slate-400" : "text-white/70 text-truncate max-w-[80px]"}`}>
+                                <p className={`text-sm font-bold truncate max-w-[100px] leading-tight ${isAdmin ? "text-white" : "text-white"}`}>
                                     {currentUser.fullName.split(' ')[0]}
+                                </p>
+                                <p className={`text-[10px] font-black uppercase tracking-widest leading-tight opacity-70 ${isAdmin ? "text-gold" : "text-white"}`}>
+                                    {isAdmin ? "Admin" : "Cliente"}
                                 </p>
                             </div>
                         </button>

@@ -103,7 +103,7 @@ export default function MyClients() {
 
                 <button
                     onClick={() => handleOpenModal()}
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-6 py-2.5 rounded-xl shadow-md transition-all flex items-center"
+                    className="bg-gradient-to-r from-[#db2777] to-[#4f46e5] hover:scale-[1.02] active:scale-95 text-white font-bold px-6 py-2.5 rounded-xl shadow-lg shadow-primary/20 transition-all flex items-center"
                 >
                     <Plus className="w-5 h-5 mr-2" />
                     Novo Cliente
