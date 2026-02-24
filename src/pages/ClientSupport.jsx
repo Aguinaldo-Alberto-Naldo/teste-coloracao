@@ -24,9 +24,9 @@ export default function ClientSupport() {
         if (selectedTicket) {
             scrollToBottom();
         }
-    }, [selectedTicket?.replies.length, selectedTicketId]);
+    }, [selectedTicket?.ticket_replies?.length, selectedTicketId]);
 
-    const myTickets = tickets.filter(t => t.userId === currentUser.id || t.userEmail === currentUser.email);
+    const myTickets = tickets.filter(t => t.user_id === currentUser.id || t.user_email === currentUser.email);
 
     const handleCreateTicket = (e) => {
         e.preventDefault();
@@ -94,13 +94,13 @@ export default function ClientSupport() {
                                     {getStatusLabel(ticket.status)}
                                 </span>
                                 <span className="text-[11px] text-slate-500 font-bold italic">
-                                    {new Date(ticket.createdAt).toLocaleDateString()}
+                                    {new Date(ticket.created_at).toLocaleDateString()}
                                 </span>
                             </div>
                             <h3 className="font-bold text-sm text-foreground mb-1 line-clamp-1">{ticket.subject}</h3>
                             <p className="text-xs text-slate-500 font-bold line-clamp-1 flex items-center gap-1">
-                                {ticket.replies.length > 0 && <MessageSquare className="w-3 h-3" />}
-                                {ticket.replies.length} respostas
+                                {(ticket.ticket_replies?.length || 0) > 0 && <MessageSquare className="w-3 h-3" />}
+                                {ticket.ticket_replies?.length || 0} respostas
                             </p>
                         </div>
                     ))}
@@ -193,12 +193,12 @@ export default function ClientSupport() {
                                 <h2 className="text-2xl font-heading font-bold text-foreground mb-1 pr-8">{selectedTicket.subject}</h2>
                                 <button onClick={() => setSelectedTicketId(null)} className="md:hidden text-muted-foreground p-2 hover:bg-secondary rounded shrink-0">Voltar</button>
                             </div>
-                            <div className="flex items-center gap-3">
+                            <div className="items-center gap-3 hidden md:flex">
                                 <span className={`px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wider border ${getStatusStyle(selectedTicket.status)}`}>
                                     Estado: {getStatusLabel(selectedTicket.status)}
                                 </span>
                                 <span className="text-sm text-slate-500 font-bold">
-                                    {new Date(selectedTicket.createdAt).toLocaleString()}
+                                    {new Date(selectedTicket.created_at).toLocaleString()}
                                 </span>
                             </div>
                         </div>
@@ -216,14 +216,14 @@ export default function ClientSupport() {
                             </div>
 
                             {/* Replies */}
-                            {selectedTicket.replies.map((reply) => (
-                                <div key={reply.id} className={`flex gap-4 ${!reply.isFromAdmin ? 'flex-row-reverse' : ''}`}>
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0 ${reply.isFromAdmin ? 'bg-accent/20 text-accent-foreground' : 'bg-primary/10 text-primary'}`}>
-                                        {reply.isFromAdmin ? 'A' : currentUser.fullName[0].toUpperCase()}
+                            {(selectedTicket.ticket_replies || []).map((reply) => (
+                                <div key={reply.id} className={`flex gap-4 ${!reply.is_from_admin ? 'flex-row-reverse' : ''}`}>
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0 ${reply.is_from_admin ? 'bg-accent/20 text-accent-foreground' : 'bg-primary/10 text-primary'}`}>
+                                        {reply.is_from_admin ? 'A' : currentUser.fullName[0].toUpperCase()}
                                     </div>
-                                    <div className={`border rounded-2xl p-4 max-w-[80%] shadow-sm ${!reply.isFromAdmin ? 'bg-primary/5 border-primary/20 rounded-tr-none ml-auto' : 'bg-card border-border rounded-tl-none'}`}>
+                                    <div className={`border rounded-2xl p-4 max-w-[80%] shadow-sm ${!reply.is_from_admin ? 'bg-primary/5 border-primary/20 rounded-tr-none ml-auto' : 'bg-card border-border rounded-tl-none'}`}>
                                         <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">{reply.text}</p>
-                                        <p className={`text-[10px] mt-2 font-bold ${!reply.isFromAdmin ? 'text-primary/60 text-right' : 'text-slate-500'}`}>{new Date(reply.createdAt).toLocaleString()}</p>
+                                        <p className={`text-[10px] mt-2 font-bold ${!reply.is_from_admin ? 'text-primary/60 text-right' : 'text-slate-500'}`}>{new Date(reply.created_at).toLocaleString()}</p>
                                     </div>
                                 </div>
                             ))}
