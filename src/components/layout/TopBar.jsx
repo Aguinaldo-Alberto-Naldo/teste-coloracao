@@ -60,7 +60,7 @@ export default function TopBar({ onMenuClick }) {
                 </button>
                 <div className="hidden md:flex items-center gap-3">
                     <div className={`text-sm font-medium ${isAdmin ? "text-slate-400" : "text-white/70"}`}>
-                        Olá, <span className={`font-bold ${isAdmin ? "text-white" : "text-white"}`}>{currentUser.fullName}</span>
+                        Olá, <span className={`font-bold ${isAdmin ? "text-white" : "text-white"}`}>{currentUser.fullName || currentUser.email}</span>
                     </div>
                     {isAdmin && (
                         <span className="px-2 py-0.5 rounded-full bg-gold/10 border border-gold/20 text-[10px] font-black text-gold uppercase tracking-widest animate-pulse">
@@ -174,7 +174,7 @@ export default function TopBar({ onMenuClick }) {
                             </div>
                             <div className="hidden sm:block text-left mr-1">
                                 <p className={`text-sm font-bold truncate max-w-[100px] leading-tight ${isAdmin ? "text-white" : "text-white"}`}>
-                                    {currentUser.fullName.split(' ')[0]}
+                                    {(currentUser.fullName || currentUser.email || "").split(' ')[0]}
                                 </p>
                                 <p className={`text-[10px] font-black uppercase tracking-widest leading-tight opacity-70 ${isAdmin ? "text-gold" : "text-white"}`}>
                                     {isAdmin ? "Admin" : "Cliente"}

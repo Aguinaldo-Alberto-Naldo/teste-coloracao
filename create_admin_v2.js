@@ -14,6 +14,12 @@ async function createAdmin() {
     const { data, error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+            data: {
+                role: 'admin',
+                full_name: 'Administrador'
+            }
+        }
     });
 
     if (error) {

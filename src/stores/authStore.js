@@ -49,7 +49,7 @@ export const useAuthStore = create(
                 if (!profile) return null;
                 return {
                     id: profile.id,
-                    fullName: profile.full_name,
+                    fullName: profile.full_name || profile.email?.split('@')[0] || "Utilizador",
                     email: profile.email,
                     role: profile.role,
                     creditsTotal: profile.credits_total,
