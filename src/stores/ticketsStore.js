@@ -62,6 +62,21 @@ export const useTicketsStore = create((set, get) => ({
 
         if (error) throw error;
 
+        // Send notification to the user if the reply is from an admin
+        if (isFromAdmin) {
+            const ticket = get().tickets.find(t => t.id === ticketId);
+            if (ticket) {
+                const { supabase } = await import("../lib/supabase");
+                await supabase.from('notifications').insert([{
+                    user_id: ticket.user_id,
+                    title: "Nova resposta ao seu ticket",
+                    message: `O suporte respondeu ao ticket: ${ticket.subject}`,
+                    type: 'ticket',
+                    link: '/support'
+                }]);
+            }
+        }
+
         set(state => ({
             tickets: state.tickets.map(t => {
                 if (t.id === ticketId) {

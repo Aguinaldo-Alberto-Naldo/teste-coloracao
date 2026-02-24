@@ -70,7 +70,8 @@ export default function LandingPage() {
         // 3. CUSTOM CURSOR
         const moveCursor = (e) => {
             if (cursorRef.current && window.innerWidth > 1024) {
-                cursorRef.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+                cursorRef.current.style.left = e.clientX + 'px';
+                cursorRef.current.style.top = e.clientY + 'px';
             }
         };
         window.addEventListener('mousemove', moveCursor);
@@ -105,25 +106,25 @@ export default function LandingPage() {
 
     if (!content || landingLoading) {
         return (
-            <div className="min-h-screen bg-cream flex items-center justify-center">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="w-12 h-12 border-4 border-gold border-t-transparent rounded-full animate-spin" />
-                    <p className="text-sm font-medium text-ink animate-pulse">A carregar...</p>
+            <div className="flex h-screen items-center justify-center bg-mesh text-white">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-gold border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+                    <p className="text-sm font-medium text-slate-900 animate-pulse tracking-widest uppercase">A carregar...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="landing-root font-sans text-ink bg-cream min-h-screen relative overflow-x-hidden selection:bg-gold/20">
+        <div className="landing-root font-sans text-slate-900 bg-white min-h-screen relative overflow-x-hidden selection:bg-primary/10">
             {/* Custom Cursor */}
             <div ref={cursorRef} className="custom-cursor hidden lg:block"></div>
 
             {/* Ambient Background Gradients for the whole page */}
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-0">
-                <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-wine/5 rounded-full blur-[100px]"></div>
-                <div className="absolute top-[50%] left-[-10%] w-[600px] h-[600px] bg-gold/5 rounded-full blur-[120px]"></div>
-                <div className="absolute bottom-[10%] right-[10%] w-[400px] h-[400px] bg-wine/10 rounded-full blur-[100px]"></div>
+                <div className="absolute top-[10%] right-[-5%] w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px]"></div>
+                <div className="absolute top-[40%] left-[-5%] w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px]"></div>
+                <div className="absolute bottom-[20%] right-[5%] w-[350px] h-[350px] bg-accent/5 rounded-full blur-[100px]"></div>
             </div>
 
             <style dangerouslySetInnerHTML={{
@@ -131,23 +132,72 @@ export default function LandingPage() {
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap');
 
                 .landing-root {
-    --cream: #f8fafc;
-    --ink: #0f172a;
-    --gold: #db2777; /* Pink */
-    --gold-light: #fbcfe8;
-    --wine: #7c3aed; /* Purple */
-    --blush: #e0e7ff;
-    --sage: #c4b5fd;
-    --white: #ffffff;
-    --muted: #475569;
-    --surface: #ffffff;
-    --radius: 0.75rem;
-    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-family: 'Jost', sans-serif;
+                    --bg-page: #FCFCFD;
+                    --ink: #0f172a;
+                    --slate-900: #0f172a;
+                    --slate-800: #1e293b;
+                    --slate-700: #334155;
+                    --slate-600: #475569;
+                    --slate-500: #64748b;
+                    --slate-400: #94a3b8;
+                    --slate-300: #cbd5e1;
+                    --slate-200: #e2e8f0;
+                    --slate-100: #f1f5f9;
+                    --white: #ffffff;
+                    --wine: #6b1f2a;
+                    --wine-light: #8b3a4a;
+                    --primary: #7c3aed; /* Vibrant Purple */
+                    --primary-light: #a78bfa;
+                    --primary-dark: #5b21b6;
+                    --gold: #b8952a;
+                    --gold-light: #d4af37;
+                    --accent: #f43f5e; /* Vivid Pink/Rose */
+                    --radius: 12px;
+                    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    --font-serif: 'Cormorant Garamond', serif;
+                    font-family: 'Outfit', sans-serif;
+                    color: var(--ink);
+                    background-color: var(--bg-page);
+                }
+
+                .bg-wine { background-color: var(--wine); }
+                .bg-gold { background-color: var(--gold); }
+                .bg-primary { background-color: var(--primary); }
+                .text-wine { color: var(--wine); }
+                .text-gold { color: var(--gold); }
+                .text-primary { color: var(--primary); }
+                .text-ink { color: var(--ink); }
+                .bg-slate-50 { background-color: #f8fafc; }
+                .bg-slate-100 { background-color: #f1f5f9; }
+                .border-slate-200 { border-color: #e2e8f0; }
+                .border-slate-100 { border-color: #f1f5f9; }
+
+                .landing-root h1, .landing-root h2, .landing-root h3, .landing-root h4 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
 }
 
-                .landing-root h1, .landing-root h2, .landing-root h3, .landing-root h4, .landing-root.font-serif {
-    font-family: 'Cormorant Garamond', serif;
+                /* Mesh Gradient Backgrounds */
+                .bg-mesh {
+                    background-color: var(--bg-page);
+                    background-image: 
+                        radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.04) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.04) 0%, transparent 40%),
+                        radial-gradient(circle at 50% 50%, rgba(107, 31, 42, 0.03) 0%, transparent 60%);
+                    background-attachment: fixed;
+                }
+
+                .bg-vibrant-light {
+    background: radial-gradient(circle at top left, hsla(253, 100%, 95%, 1), transparent),
+                radial-gradient(circle at bottom right, hsla(339, 100%, 95%, 1), transparent);
+}
+
+                /* Glow Text */
+                .glow-text {
+    background: linear-gradient(to right, var(--primary), var(--accent), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px rgba(124, 58, 237, 0.2));
 }
 
                 .landing-root a { cursor: none; }
@@ -157,14 +207,14 @@ export default function LandingPage() {
                 .custom-cursor {
     position: fixed;
     top: 0; left: 0;
-    width: 12px; height: 12px;
+    width: 20px; height: 20px;
     background-color: var(--gold);
     border-radius: 50%;
     pointer-events: none;
     z-index: 9999;
-    transform: translate3d(-100px, -100px, 0);
-    transition: transform 0.1s ease-out;
-    mix-blend-mode: multiply;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease-out, background-color 0.3s ease;
+    mix-blend-mode: difference; /* Better visibility on all colors */
 }
 
                 .landing-root *:hover ~ .custom-cursor {
@@ -193,12 +243,13 @@ export default function LandingPage() {
 
                 .btn-outline {
     border: 1px solid var(--gold);
-    color: var(--ink);
+    color: var(--gold);
     padding: 0.75rem 1.5rem;
     border-radius: var(--radius);
     transition: var(--transition);
+    font-weight: 600;
 }
-                .btn-outline:hover { background: var(--gold); color: var(--white); }
+                .btn-outline:hover { background: var(--gold); color: var(--slate-900); }
 
 /* Navbar */
 #navbar {
@@ -208,11 +259,12 @@ export default function LandingPage() {
     background: transparent;
 }
 #navbar.scrolled {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 4px 25px rgba(124, 58, 237, 0.1);
-    border-bottom: 1px solid rgba(124, 58, 237, 0.1);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     padding: 1rem 0;
+    color: var(--ink);
 }
 
 /* Removed grain texture overlay as requested */
@@ -271,7 +323,19 @@ hr.decor {
     border-radius: 8px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
     padding: 2rem;
+    max-width: 320px;
+    margin: 0 auto;
     border: 1px solid rgba(184, 149, 42, 0.1);
+}
+                @keyframes scan {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(5000%); }
+}
+                .animate-scan {
+    animation: scan 4s linear infinite;
+}
+                .group:hover .animate-scan {
+    animation-duration: 2s;
 }
 
                 /* Swatch */
@@ -292,49 +356,8 @@ hr.decor {
 }
                 .swatch-circle:hover .swatch-label { opacity: 1; }
 
-                /* Pricing Cards */
-                .pricing-card {
-    background: var(--surface);
-    padding: 3rem 2rem;
-    border-radius: var(--radius);
-    transition: var(--transition);
-    position: relative;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-}
-                .pricing-card.highlight {
-    background: var(--wine) !important;
-    color: var(--white);
-    transform: scale(1.08); /* Increased scale slightly */
-    box-shadow: 0 25px 50px -12px rgba(124, 58, 237, 0.5);
-    z-index: 10;
-    padding-top: 4rem; /* Make it feel taller */
-    padding-bottom: 4rem;
-}
-@media(max-width: 1024px) {
-                    .pricing-card.highlight { transform: scale(1); }
-}
-                .pricing-card:hover { box-shadow: 0 20px 60px rgba(184, 149, 42, 0.15); transform: translateY(-5px); }
-                .pricing-card.highlight:hover { transform: scale(1.05) translateY(-5px); }
-@media(max-width: 1024px) { .pricing-card.highlight:hover { transform: translateY(-5px); } }
-
-                .badge-popular {
-    position: absolute; top: -12px; right: 2rem;
-    background: var(--gold); color: var(--white);
-    padding: 4px 12px; font-size: 0.75rem; font-weight: 600;
-    letter-spacing: 0.1em; transform: rotate(-2deg);
-    border-radius: 2px;
-}
-
-                /* FAQ Accordion */
-                .faq-item { border-bottom: 1px solid rgba(15, 23, 42, 0.1); }
-                .faq-header { padding: 1.5rem 0; cursor: none; display: flex; justify-content: space-between; align-items: center; font-weight: 500; font-size: 1.1rem; color: var(--ink); }
-                .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; color: var(--ink); line-height: 1.6; opacity: 0.8; }
-                .faq-content-inner { padding-bottom: 1.5rem; }
-                .faq-icon { transition: transform 0.3s ease; color: var(--gold); }
-                .faq-item.open .faq-icon { transform: rotate(180deg); }
-
-/* Scroll Down Indicator */
-@keyframes bounce {
+                /* Animations */
+                @keyframes bounce {
     0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
     40% { transform: translateY(-10px); }
     60% { transform: translateY(-5px); }
@@ -351,103 +374,133 @@ hr.decor {
                         ) : (
                             <span className="text-gold text-xl group-hover:rotate-45 transition-transform duration-500">✦</span>
                         )}
-                        <span className="font-serif text-2xl font-semibold tracking-wide">
+                        <span className="font-serif text-2xl font-bold tracking-tight text-slate-900">
                             {appName}
                         </span>
                     </a>
 
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center gap-8">
-                        <a href="#como-funciona" className="text-sm font-medium hover:text-gold transition-colors">Como Funciona</a>
-                        <a href="#servicos" className="text-sm font-medium hover:text-gold transition-colors">Serviços</a>
-                        <a href="#precos" className="text-sm font-medium hover:text-gold transition-colors">Preços</a>
-                        <a href="#faq" className="text-sm font-medium hover:text-gold transition-colors">FAQ</a>
-                        <div className="h-4 w-px bg-gold/30"></div>
-                        <button onClick={() => navigate('/login')} className="text-sm font-medium hover:text-wine transition-colors">Login</button>
-                        <button onClick={() => navigate('/register')} className="btn-wine text-sm py-2 px-6">→ Começar Agora</button>
+                    <div className="hidden lg:flex items-center gap-10">
+                        <a href="#como-funciona" className="text-sm font-bold text-slate-600 hover:text-primary transition-colors tracking-wide">COMO FUNCIONA</a>
+                        <a href="#servicos" className="text-sm font-bold text-slate-600 hover:text-primary transition-colors tracking-wide">SERVIÇOS</a>
+                        <a href="#precos" className="text-sm font-bold text-slate-600 hover:text-primary transition-colors tracking-wide">PREÇOS</a>
+                        <a href="#faq" className="text-sm font-bold text-slate-600 hover:text-primary transition-colors tracking-wide">FAQ</a>
+                        <div className="w-[1px] h-4 bg-slate-200 mx-2"></div>
+                        <Link to="/login" className="text-sm font-bold text-slate-900 hover:text-primary transition-colors tracking-wide">LOGIN</Link>
+                        <button onClick={() => navigate('/register')} className="bg-wine text-white px-8 py-3 rounded-full text-sm font-bold shadow-lg shadow-wine/10 hover:bg-wine-light hover:scale-105 active:scale-95 transition-all">COMEÇAR</button>
                     </div>
 
                     {/* Mobile Toggle */}
-                    <button className="md:hidden text-ink" onClick={toggleMobileMenu}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12h18M3 6h18M3 18h18" /></svg>
+                    <button className="lg:hidden text-slate-900 p-2" onClick={toggleMobileMenu}>
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                     </button>
                 </div>
 
                 {/* Mobile Menu */}
-                <div id="mobile-menu" className="hidden flex-col bg-[#FAF9F6] fixed inset-0 z-40 p-8 pt-24 gap-6 items-center text-xl font-serif">
-                    <button className="absolute top-6 right-6 text-ink" onClick={toggleMobileMenu}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
+                <div id="mobile-menu" className="hidden flex-col bg-white/95 backdrop-blur-xl fixed inset-0 z-[100] p-8 pt-24 gap-8 items-center text-2xl font-serif text-slate-900">
+                    <button className="absolute top-6 right-6 text-slate-900" onClick={toggleMobileMenu}>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
                     </button>
-                    <a href="#como-funciona" onClick={toggleMobileMenu}>Como Funciona</a>
-                    <a href="#servicos" onClick={toggleMobileMenu}>Serviços</a>
-                    <a href="#precos" onClick={toggleMobileMenu}>Preços</a>
-                    <a href="#faq" onClick={toggleMobileMenu}>FAQ</a>
-                    <button onClick={() => { toggleMobileMenu(); navigate('/login'); }} className="mt-4">Login</button>
-                    <button onClick={() => navigate('/register')} className="btn-wine text-lg w-full justify-center mt-4">Começar Agora</button>
+                    <a href="#como-funciona" onClick={toggleMobileMenu} className="hover:text-primary transition-colors">Como Funciona</a>
+                    <a href="#servicos" onClick={toggleMobileMenu} className="hover:text-primary transition-colors">Serviços</a>
+                    <a href="#precos" onClick={toggleMobileMenu} className="hover:text-primary transition-colors">Preços</a>
+                    <a href="#faq" onClick={toggleMobileMenu} className="hover:text-primary transition-colors">FAQ</a>
+                    <div className="w-12 h-px bg-slate-200"></div>
+                    <button onClick={() => { toggleMobileMenu(); navigate('/login'); }} className="hover:text-primary transition-colors">Login</button>
+                    <button onClick={() => navigate('/register')} className="bg-wine text-white w-full justify-center mt-4 py-4 rounded-xl font-bold text-lg shadow-xl shadow-wine/20">Começar Agora</button>
                 </div>
             </nav>
 
             {/* 2. HERO */}
-            <header className="relative min-h-screen flex items-center pt-20 overflow-hidden">
-                <div className="hero-blob"></div>
+            <header className="relative min-h-screen flex items-center pt-24 pb-12 overflow-hidden">
+                <div className="hero-blob opacity-20"></div>
                 <div className="container-main relative z-10 w-full">
-                    <div className="grid lg:grid-cols-12 gap-12 items-center">
+                    <div className="grid lg:grid-cols-12 gap-16 lg:gap-24 items-center">
 
                         {/* Left Col */}
                         <div className="lg:col-span-7" data-animate>
-                            <div className="w-16 h-px bg-gold mb-8"></div>
-                            <h1 className="text-6xl md:text-[5.5rem] leading-[0.9] font-light mb-8 text-ink">
-                                {content?.hero?.title}
+                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/10 mb-8">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                                </span>
+                                <span className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">{content?.hero?.badge}</span>
+                            </div>
+
+                            <h1 className="text-6xl md:text-[5.5rem] leading-[0.9] font-black mb-8 text-slate-900 uppercase tracking-tighter">
+                                <span className="glow-text">Descubra</span><br />
+                                As Suas Cores
                             </h1>
-                            <p className="text-lg md:text-xl text-ink/90 max-w-lg mb-10 leading-relaxed font-medium">
+                            <p className="text-lg md:text-xl text-slate-600 max-w-lg mb-10 leading-relaxed font-medium">
                                 {content?.hero?.subtitle}
                             </p>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-12">
-                                <button onClick={() => navigate('/register')} className="btn-wine text-lg font-medium shadow-md">→ {content?.hero?.ctaText}</button>
-                                <a href="#como-funciona" className="text-sm font-bold tracking-widest uppercase text-ink hover:text-wine transition-colors flex items-center gap-2">
-                                    Ver como funciona <span className="scroll-down">↓</span>
+                                <button
+                                    onClick={() => navigate('/register')}
+                                    className="bg-wine text-white px-8 py-4 rounded-xl text-lg font-bold shadow-[0_20px_40px_rgba(107,31,42,0.2)] hover:scale-105 hover:bg-wine-light transition-all duration-300"
+                                >
+                                    → {content?.hero?.ctaText}
+                                </button>
+                                <a href="#como-funciona" className="text-sm font-bold tracking-[0.2em] uppercase text-slate-800 hover:text-primary transition-colors flex items-center gap-2 group">
+                                    Ver como funciona <span className="scroll-down text-primary group-hover:translate-y-1 transition-transform">↓</span>
                                 </a>
                             </div>
 
                             {/* Stats */}
-                            <div className="flex flex-wrap gap-x-8 gap-y-4 text-sm tracking-wide text-ink font-medium" data-animate data-count-to>
+                            <div className="grid grid-cols-3 gap-8 pt-8 border-t border-slate-200">
                                 {content?.hero?.stats?.map((stat, i) => (
-                                    <div key={i} className="flex items-center gap-2">
-                                        <span className="text-gold">✦</span>
-                                        <span className="font-serif text-3xl font-bold text-ink">
-                                            <span className="stat-number" data-val={stat.value} data-suffix={stat.suffix}>0</span>
-                                        </span> {stat.label}
+                                    <div key={i} className="space-y-1" data-animate data-count-to>
+                                        <div className="text-4xl font-bold text-slate-900 stat-number" data-val={stat.val} data-suffix={stat.suffix}>0</div>
+                                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{stat.label}</div>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
                         {/* Right Col - Visual Composition */}
-                        <div className="lg:col-span-5 relative h-[500px] hidden md:block" data-animate>
-                            {/* Central Focus */}
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/50 backdrop-blur-md border border-white p-4 rounded-xl shadow-xl z-20 flex items-center gap-3">
-                                <span className="text-gold animate-pulse">✦</span>
-                                <span className="font-serif text-xl tracking-wide">Outono Quente</span>
-                            </div>
+                        <div className="lg:col-span-5 relative h-[500px]" data-animate>
+                            <div className="relative w-full h-full flex items-center justify-end lg:pr-12">
+                                {/* Main Image: Draping */}
+                                <div className="relative z-10 w-full max-w-[440px] aspect-square rounded-[2rem] overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.15)] border border-slate-200 rotate-1 group-hover:rotate-0 transition-all duration-700 bg-white group">
+                                    <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-accent/5 z-20 pointer-events-none"></div>
+                                    <img
+                                        src="/assets/hero-draping.png"
+                                        alt="Color Draping"
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+                                    />
 
-                            {/* Floating Swatches */}
-                            <div className="swatch-circle z-10" style={{ backgroundColor: '#C0583A', top: '10%', left: '20%' }}>
-                                <span className="swatch-label">Terracota</span>
-                            </div>
-                            <div className="swatch-circle z-0" style={{ backgroundColor: '#FFAD8F', top: '25%', right: '15%', width: '80px', height: '80px' }}>
-                                <span className="swatch-label">Pêssego</span>
-                            </div>
-                            <div className="swatch-circle z-10" style={{ backgroundColor: '#B8860B', bottom: '20%', left: '10%', width: '110px', height: '110px' }}>
-                                <span className="swatch-label">Dourado</span>
-                            </div>
-                            <div className="swatch-circle z-10" style={{ backgroundColor: '#6B7B3A', bottom: '15%', right: '25%' }}>
-                                <span className="swatch-label">Verde Musgo</span>
-                            </div>
-                            <div className="swatch-circle z-0" style={{ backgroundColor: '#E8C5C5', top: '45%', left: '5%', width: '70px', height: '70px' }}>
-                                <span className="swatch-label">Blush</span>
-                            </div>
-                            <div className="swatch-circle z-0" style={{ backgroundColor: '#B87333', top: '60%', right: '10%', width: '90px', height: '90px' }}>
-                                <span className="swatch-label">Cobre</span>
+                                    {/* AI Scanning Effect */}
+                                    <div className="absolute inset-0 z-30 pointer-events-none overflow-hidden">
+                                        <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-gold to-transparent animate-scan"></div>
+                                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(124,58,237,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                                    </div>
+
+                                    {/* Decorative UI labels */}
+                                    <div className="absolute bottom-6 left-6 z-40 bg-white/90 backdrop-blur-md px-4 py-2 rounded-lg border border-slate-200 text-[10px] font-bold tracking-[0.2em] text-slate-900 uppercase shadow-xl flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div>
+                                        Análise de Cores Realista
+                                    </div>
+                                </div>
+
+                                {/* Floating Color Swatches - "Gain Form" */}
+                                <div className="absolute -bottom-6 -left-12 z-40 flex flex-col gap-3" data-animate>
+                                    {['#C0583A', '#B87333', '#B8860B'].map((c, i) => (
+                                        <div key={i} className="w-10 h-10 rounded-lg shadow-2xl border-2 border-slate-900/50" style={{ backgroundColor: c, transform: `translateX(${i * 10}px)` }}></div>
+                                    ))}
+                                </div>
+
+                                {/* Floating Color Wheel */}
+                                <div className="absolute -top-16 -right-12 z-20 w-56 h-56 rounded-full overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.4)] animate-spin-slow hover:pause border-[6px] border-slate-900/80 backdrop-blur-sm lg:block hidden">
+                                    <img
+                                        src="/assets/hero-wheel.png"
+                                        alt="Color Wheel"
+                                        className="w-full h-full object-cover scale-110"
+                                    />
+                                </div>
+
+                                {/* Decorative Dots/Shapes */}
+                                <div className="absolute top-1/4 -left-10 w-20 h-20 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
+                                <div className="absolute bottom-1/4 -right-5 w-32 h-32 bg-accent/20 rounded-full blur-2xl animate-pulse delay-700"></div>
                             </div>
                         </div>
                     </div>
@@ -455,14 +508,14 @@ hr.decor {
             </header>
 
             {/* 3. SOCIAL PROOF */}
-            <div className="py-8 border-y border-gold/20 bg-surface/50 overflow-hidden">
+            <div className="py-12 border-y border-slate-200 bg-slate-50 relative z-10">
                 <div className="container-main">
-                    <p className="text-center text-xs uppercase tracking-[0.2em] text-ink font-semibold mb-6">Utilizado por profissionais de</p>
-                    <div className="flex flex-wrap justify-center gap-x-12 gap-y-4 font-serif text-xl tracking-wider text-ink font-medium">
+                    <p className="text-center text-xs uppercase tracking-[0.2em] text-slate-500 font-bold mb-8">Utilizado por profissionais de</p>
+                    <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 font-serif text-xl tracking-wider text-slate-700 font-medium">
                         {content?.hero?.showcases?.map((prof, i) => (
                             <React.Fragment key={i}>
-                                <span>{prof}</span>
-                                {i < (content?.hero?.showcases?.length || 0) - 1 && <span className="text-gold">✦</span>}
+                                <span className="hover:text-primary transition-colors">{prof}</span>
+                                {i < (content?.hero?.showcases?.length || 0) - 1 && <span className="text-primary/20">✦</span>}
                             </React.Fragment>
                         ))}
                     </div>
@@ -473,18 +526,18 @@ hr.decor {
             <section id="como-funciona" className="section-padding">
                 <div className="container-main">
                     <div className="text-center max-w-2xl mx-auto mb-20" data-animate>
-                        <h2 className="text-sm font-sans uppercase tracking-widest text-gold font-bold mb-4">{content?.howItWorks?.title}</h2>
-                        <p className="text-4xl md:text-5xl font-medium font-serif leading-tight">{content?.howItWorks?.headline}</p>
+                        <h2 className="text-sm font-sans uppercase tracking-widest text-primary font-bold mb-4">{content?.howItWorks?.title}</h2>
+                        <p className="text-4xl md:text-5xl font-medium font-serif leading-tight text-slate-900">{content?.howItWorks?.headline}</p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-12 lg:gap-20">
                         {content?.howItWorks?.steps?.map((step, i) => (
                             <div key={i} className="relative group" data-animate>
-                                <div className="text-[6rem] leading-none font-serif font-bold text-wine opacity-20 group-hover:opacity-40 transition-opacity duration-500 absolute -top-12 -left-6 z-0 pointer-events-none">{step.num}</div>
+                                <div className="text-[6rem] leading-none font-serif font-bold text-primary opacity-5 group-hover:opacity-10 transition-opacity duration-500 absolute -top-12 -left-6 z-0 pointer-events-none">{step.num}</div>
                                 <div className="relative z-10 pt-8">
-                                    <hr className="decor mb-6 border-gold/40 group-hover:border-wine transition-colors" />
-                                    <h3 className="text-xl font-bold mb-4">{step.title}</h3>
-                                    <p className="text-ink/90 font-medium leading-relaxed">{step.desc}</p>
+                                    <hr className="decor mb-6 border-primary/10 group-hover:border-primary transition-colors" />
+                                    <h3 className="text-xl font-bold mb-4 text-slate-900">{step.title}</h3>
+                                    <p className="text-slate-600 font-medium leading-relaxed">{step.desc}</p>
                                 </div>
                             </div>
                         ))}
@@ -493,27 +546,30 @@ hr.decor {
             </section>
 
             {/* 5. SERVIÇOS & 6. PREVIEW */}
-            <section id="servicos" className="section-padding bg-surface">
+            <section id="servicos" className="section-padding">
                 <div className="container-main">
                     <div className="grid lg:grid-cols-2 gap-20 items-center">
 
                         {/* Funcionalidades */}
                         <div data-animate>
-                            <h2 className="text-4xl md:text-5xl font-serif font-light mb-12 leading-tight max-w-lg">{content?.services?.headline}</h2>
+                            <h2 className="text-4xl md:text-5xl font-serif font-light mb-12 leading-tight max-w-lg text-slate-900">{content?.services?.headline}</h2>
 
                             <div className="grid sm:grid-cols-2 gap-x-8 gap-y-12 mb-12">
                                 {content?.services?.features?.map((feat, i) => (
                                     <div key={i}>
-                                        <div className="text-gold mb-4"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg></div>
-                                        <h4 className="font-bold mb-2 text-lg">{feat.title}</h4>
-                                        <p className="text-sm text-ink/90 font-medium">{feat.desc}</p>
+                                        <div className="text-primary mb-4"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg></div>
+                                        <h4 className="font-bold mb-2 text-lg text-slate-900">{feat.title}</h4>
+                                        <p className="text-sm text-slate-600 font-medium">{feat.desc}</p>
                                     </div>
                                 ))}
                             </div>
 
-                            <div className="bg-slate-900 text-white p-8 rounded-lg shadow-lg">
-                                <h4 className="font-serif text-xl italic mb-4">✦ E ainda inclui...</h4>
-                                <p className="text-sm leading-relaxed text-white font-medium">
+                            <div className="bg-white text-slate-900 p-10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-primary/10 transition-colors"></div>
+                                <h4 className="font-serif text-2xl italic mb-6 flex items-center gap-3">
+                                    <span className="text-primary">✦</span> E ainda inclui...
+                                </h4>
+                                <p className="text-base leading-relaxed text-slate-600 font-medium">
                                     {content?.services?.extraText}
                                 </p>
                             </div>
@@ -521,14 +577,15 @@ hr.decor {
 
                         {/* Mockup */}
                         <div className="lg:pl-10" data-animate>
-                            <p className="text-sm font-sans uppercase tracking-widest text-gold mb-8">Vê um relatório real</p>
-                            <div className="report-mockup bg-white text-ink">
-                                <div className="flex justify-between items-start mb-8 border-b border-surface pb-6">
+                            <p className="text-sm font-sans uppercase tracking-widest text-primary mb-8">Vê um relatório real</p>
+                            <div className="report-mockup bg-white text-slate-900 p-10 rounded-2xl shadow-2xl relative">
+                                <div className="absolute -top-4 -right-4 bg-gold text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">Premium Report</div>
+                                <div className="flex justify-between items-start mb-8 border-b border-slate-100 pb-6">
                                     <div>
-                                        <h3 className="font-serif text-3xl mb-1">Ana Silva</h3>
-                                        <p className="text-xs tracking-wider text-muted uppercase">Análise de Coloração</p>
+                                        <h3 className="font-serif text-3xl mb-1 text-slate-900">Ana Silva</h3>
+                                        <p className="text-xs tracking-wider text-slate-400 uppercase font-bold">Análise de Coloração</p>
                                     </div>
-                                    <div className="bg-surface px-4 py-2 text-sm font-serif italic text-wine rounded">Outono Quente</div>
+                                    <div className="bg-cream px-4 py-2 text-sm font-serif italic text-wine rounded-lg border border-wine/10">Outono Quente</div>
                                 </div>
 
                                 <h4 className="font-serif text-lg mb-4">Paleta Pessoal</h4>
@@ -540,14 +597,14 @@ hr.decor {
                                         { c: '#708238', n: 'Oliva' }, { c: '#800020', n: 'Bordô' }
                                     ].map((color, i) => (
                                         <div key={i} className="flex flex-col gap-1">
-                                            <div className="h-10 w-full rounded shadow-sm border border-black/5" style={{ backgroundColor: color.c }}></div>
-                                            <span className="text-[10px] text-muted truncate text-center uppercase">{color.n}</span>
+                                            <div className="h-10 w-full rounded shadow-sm border border-slate-900/5 rotate-1 hover:rotate-0 transition-transform" style={{ backgroundColor: color.c }}></div>
+                                            <span className="text-[10px] text-slate-500 truncate text-center uppercase font-bold">{color.n}</span>
                                         </div>
                                     ))}
                                 </div>
 
-                                <h4 className="font-serif font-bold text-lg mb-2">Vestuário Recomendado</h4>
-                                <p className="text-sm text-ink font-medium leading-relaxed line-clamp-3">
+                                <h4 className="font-serif text-lg mb-6 text-slate-800 font-bold border-l-2 border-gold pl-3">Vestuário Recomendado</h4>
+                                <p className="text-[11px] text-slate-600 font-medium leading-relaxed">
                                     Privilegie cores ricas e texturas pesadas. O branco off-white ou creme deve substituir o branco puro. Opte por tecidos como veludo, camurça e linho pesado para maximizar a sua coloração terrosa.
                                 </p>
                             </div>
@@ -560,81 +617,51 @@ hr.decor {
             <section id="precos" className="section-padding">
                 <div className="container-main">
                     <div className="text-center max-w-2xl mx-auto mb-20" data-animate>
-                        <h2 className="text-4xl md:text-5xl font-medium font-serif mb-6">{content?.pricing?.headline}</h2>
-                        <p className="text-ink/90 font-medium">{content?.pricing?.subheadline}</p>
+                        <h2 className="text-4xl md:text-5xl font-medium font-serif mb-6 text-slate-900">{content?.pricing?.headline}</h2>
+                        <p className="text-slate-600 font-medium">{content?.pricing?.subheadline}</p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-8 lg:gap-6 items-stretch mb-16" data-animate>
+                    <div className="grid md:grid-cols-3 gap-6 lg:gap-8 items-center mb-16 relative" data-animate>
                         {packages.map((pack) => (
-                            <div key={pack.id} className={`pricing-card text-center flex flex-col ${pack.is_popular ? 'highlight' : 'border-2 border-slate-300 shadow-xl'} `}>
-                                {pack.is_popular && <div className="badge-popular">✦ MAIS POPULAR</div>}
-                                <h3 className={`text-base font-bold uppercase tracking-widest ${pack.is_popular ? 'text-white' : 'text-ink'} mb-6`}>Pack {pack.name}</h3>
-                                <div className="mb-2">
-                                    <span className="font-sans text-xl font-bold">{pack.credits}</span>
-                                    <span className={`font-serif font-medium italic ${pack.is_popular ? 'text-white/90' : 'text-ink'} `}> créditos</span>
+                            <div key={pack.id} className={`pricing-card text-center flex flex-col transition-all duration-700 relative ${pack.is_popular ? 'bg-gradient-to-br from-primary via-accent to-wine rounded-[2.5rem] py-14 px-10 scale-110 z-30 shadow-[0_40px_100px_rgba(124,58,237,0.4)] border border-white/20' : 'bg-white border border-slate-200 shadow-xl z-10 hover:z-20 hover:scale-[1.02] p-8 rounded-3xl'} `}>
+                                {pack.is_popular && <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gold text-white text-[11px] font-bold px-6 py-2 rounded-full uppercase tracking-widest shadow-[0_10px_20px_rgba(245,158,11,0.3)] z-40">✦ MAIS POPULAR</div>}
+                                <h3 className={`text-sm font-bold uppercase tracking-[0.2em] ${pack.is_popular ? 'text-white/80' : 'text-slate-400'} mb-8`}>Pack {pack.name}</h3>
+                                <div className={`text-base font-black tracking-widest ${pack.is_popular ? 'text-gold-light' : 'text-primary'} mb-2`}>
+                                    {pack.credits} ANÁLISES
                                 </div>
-                                <div className={`font-serif text-[3.5rem] leading-tight mb-2 font-semibold ${pack.is_popular ? 'text-white' : 'text-ink'} `}>
+                                <div className={`text-[3.5rem] leading-tight mb-8 font-black tracking-tighter ${pack.is_popular ? 'text-white' : 'text-slate-900'}`}>
                                     {new Intl.NumberFormat('pt-AO', { style: 'currency', currency: 'AOA', maximumFractionDigits: 0 }).format(pack.price)}
                                 </div>
-                                <div className={`text-sm font-bold ${pack.is_popular ? 'text-white/90' : 'text-ink/80'} mb-8 tracking-wide uppercase`}>
-                                    {new Intl.NumberFormat('pt-AO', { style: 'currency', currency: 'AOA', maximumFractionDigits: 0 }).format(pack.price / pack.credits)} / análise
-                                </div>
 
-                                <hr className={pack.is_popular ? "border-t border-white/30 mb-8" : "border-t border-slate-300 mb-8"} />
+                                <hr className={`border-t mb-8 ${pack.is_popular ? 'border-white/20' : 'border-slate-100'}`} />
 
-                                <ul className={`text-base font-medium text-left space-y-4 mb-10 flex-1 ${pack.is_popular ? 'text-white' : 'text-ink'} `}>
-                                    <li><span className={pack.is_popular ? "text-gold-light" : "text-wine"}>✦</span> {pack.description}</li>
-                                    <li><span className={pack.is_popular ? "text-gold-light" : "text-wine"}>✦</span> Validade de 1 mês</li>
-                                    <li><span className={pack.is_popular ? "text-gold-light" : "text-wine"}>✦</span> Análise completa</li>
-                                    <li><span className={pack.is_popular ? "text-gold-light" : "text-wine"}>✦</span> PDF exportável</li>
-                                    <li><span className={pack.is_popular ? "text-gold-light" : "text-wine"}>✦</span> CRM integrado</li>
-                                    {pack.is_popular && <li><span className="text-gold-light font-bold">✦</span> Suporte prioritário</li>}
+                                <ul className={`text-sm font-medium text-left space-y-5 mb-12 flex-1 ${pack.is_popular ? 'text-white/90' : 'text-slate-600'}`}>
+                                    <li className="flex items-center gap-3"><span className={pack.is_popular ? 'text-gold-light' : 'text-primary'}>✦</span> {pack.description}</li>
+                                    <li className="flex items-center gap-3"><span className={pack.is_popular ? 'text-gold-light' : 'text-primary'}>✦</span> Validade de 1 mês</li>
+                                    <li className="flex items-center gap-3"><span className={pack.is_popular ? 'text-gold-light' : 'text-primary'}>✦</span> Análise completa</li>
+                                    <li className="flex items-center gap-3"><span className={pack.is_popular ? 'text-gold-light' : 'text-primary'}>✦</span> PDF exportável</li>
+                                    <li className="flex items-center gap-3"><span className={pack.is_popular ? 'text-gold-light' : 'text-primary'}>✦</span> CRM integrado</li>
+                                    {pack.is_popular && <li className="flex items-center gap-3"><span className="text-gold-light font-bold">✦</span> Suporte prioritário</li>}
                                 </ul>
                                 <button
                                     onClick={() => navigate('/register')}
-                                    className={pack.is_popular ? "w-full bg-gold hover:bg-gold-light text-white py-3 px-6 rounded transition-colors font-bold shadow-lg mt-auto" : "w-full bg-slate-900 text-white hover:bg-slate-800 py-3 px-6 rounded transition-colors font-bold shadow-md mt-auto"}
+                                    className={`w-full py-4 px-6 rounded-2xl transition-all font-bold tracking-widest uppercase text-xs ${pack.is_popular ? 'bg-white text-primary shadow-xl hover:bg-gold hover:text-white' : 'bg-slate-50 text-slate-900 border border-slate-200 hover:bg-slate-100'} transform active:scale-95`}
                                 >
-                                    → Comprar Pack
+                                    Comprar Agora
                                 </button>
                             </div>
                         ))}
                     </div>
 
-                    <div className="bg-surface p-6 rounded text-sm text-ink font-medium text-center max-w-3xl mx-auto border border-slate-300 shadow-sm" data-animate>
-                        <span className="text-gold font-serif italic text-lg mr-2">i</span>
+                    <div className="bg-slate-50 p-8 rounded-2xl text-sm text-slate-600 font-medium text-center max-w-3xl mx-auto border border-slate-200 shadow-xl" data-animate>
+                        <span className="text-primary font-serif italic text-lg mr-2 font-bold">i</span>
                         <strong>Como funciona a activação:</strong> {content?.pricing?.activationInfo}
-                        <div className="mt-4 pt-4 border-t border-gold/10">
-                            Tem questões? <a href={`mailto:${content?.footer?.contactEmail}`} className="text-ink hover:text-wine">{content?.footer?.contactEmail}</a> &nbsp;&middot;&nbsp; WhatsApp: +244 9XX XXX XXX
+                        <div className="mt-6 pt-6 border-t border-slate-100 text-slate-400">
+                            Tem questões? <a href={`mailto:${content?.footer?.contactEmail}`} className="text-slate-900 hover:text-primary transition-colors font-bold underline decoration-primary/30">{content?.footer?.contactEmail}</a> &nbsp;&middot;&nbsp; WhatsApp: +244 9XX XXX XXX
                         </div>
                     </div>
                 </div>
             </section>
-
-            {/* 8. TESTIMONIALS (Oculto a pedido do utilizador) */}
-            {false && (
-                <section className="section-padding bg-wine text-white relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-gold/5 rounded-full blur-3xl"></div>
-                    <div className="container-main relative z-10">
-                        <h2 className="text-4xl md:text-5xl font-serif font-light text-center mb-16" data-animate>O que dizem os nossos clientes.</h2>
-
-                        <div className="grid md:grid-cols-3 gap-8">
-                            {[
-                                { q: "Passei a oferecer análise de coloração a todos os meus clientes de consultoria. O relatório é tão profissional que eles ficam impressionados.", n: "Mariana Costa", r: "Consultora de Imagem" },
-                                { q: "Em 2 minutos tenho um relatório completo que antes me demorava 1 hora a preparar manualmente. Economizo tempo e impressiono os meus clientes.", n: "Sofia Rodrigues", r: "Personal Stylist" },
-                                { q: "Uso o ChromaTest para as minhas alunas de estilismo. Os relatórios são perfeitos como material de estudo e de prática.", n: "Inês Ferreira", r: "Professora de Moda" }
-                            ].map((t, i) => (
-                                <div key={i} className="p-8 border border-white/20 rounded backdrop-blur-sm bg-white/5" data-animate>
-                                    <div className="text-white text-6xl font-serif leading-none h-8 mb-4">"</div>
-                                    <p className="text-white leading-relaxed mb-8 italic font-medium">"{t.q}"</p>
-                                    <hr className="border-t border-white/20 mb-4" />
-                                    <p className="font-serif text-xl font-medium text-white">{t.n}</p>
-                                    <p className="text-sm uppercase tracking-wider text-white/80">{t.r}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            )}
 
             {/* 9. FAQ */}
             <section id="faq" className="section-padding">
@@ -643,15 +670,15 @@ hr.decor {
                         <h2 className="text-4xl md:text-5xl font-serif font-light mb-4">{content?.faq?.headline}</h2>
                     </div>
 
-                    <div className="space-y-2" data-animate>
+                    <div className="space-y-4" data-animate>
                         {content?.faq?.items?.map((faq, i) => (
-                            <div key={i} className="faq-item">
-                                <button className="faq-header w-full text-left focus:outline-none focus-visible:text-wine" onClick={toggleFaq} aria-expanded="false">
-                                    <span className="pr-4">{faq.q}</span>
-                                    <svg className="faq-icon w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                            <div key={i} className="faq-item bg-white border border-slate-200 rounded-2xl px-8 mb-4 group hover:border-primary/30 hover:shadow-xl transition-all duration-300 overflow-hidden">
+                                <button className="faq-header w-full text-left focus:outline-none focus-visible:text-primary text-slate-900 flex items-center justify-between py-7" onClick={toggleFaq} >
+                                    <span className="text-lg font-medium tracking-wide pr-6">{faq.q}</span>
+                                    <svg className="faq-icon w-6 h-6 text-slate-400 transition-transform duration-300 transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                                 </button>
-                                <div className="faq-content text-sm">
-                                    <div className="faq-content-inner">{faq.a}</div>
+                                <div className="faq-content text-slate-600 text-sm leading-relaxed overflow-hidden">
+                                    <div className="faq-content-inner pb-8 border-t border-slate-100 pt-6">{faq.a}</div>
                                 </div>
                             </div>
                         ))}
@@ -660,35 +687,35 @@ hr.decor {
             </section>
 
             {/* 10. FINAL CTA */}
-            <section className="py-32 bg-slate-900 text-white text-center relative overflow-hidden">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-wine/20 rounded-full blur-[100px] pointer-events-none"></div>
+            <section className="py-32 bg-white text-slate-900 text-center relative overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
                 <div className="container-main relative z-10" data-animate>
-                    <div className="w-20 h-px bg-gold mx-auto mb-10"></div>
-                    <h2 className="text-4xl md:text-6xl font-serif font-bold mb-8 max-w-3xl mx-auto leading-tight text-white">{content?.cta?.headline}</h2>
-                    <p className="text-lg text-white font-medium mb-12 max-w-xl mx-auto">{content?.cta?.subheadline}</p>
-                    <button onClick={() => navigate('/register')} className="btn-wine text-lg font-bold px-10 py-4 shadow-2xl mb-8">→ {content?.cta?.btnText}</button>
-                    <p className="text-sm text-gold font-bold uppercase tracking-widest">Tem perguntas? <a href={`mailto:${content?.footer?.contactEmail} `} className="text-white hover:text-gold-light transition-colors">{content?.footer?.contactEmail}</a></p>
+                    <h2 className="text-4xl md:text-7xl font-serif font-bold mb-8 max-w-4xl mx-auto leading-tight text-slate-900">{content?.cta?.headline}</h2>
+                    <p className="text-lg md:text-xl text-slate-600 font-medium mb-12 max-w-2xl mx-auto">{content?.cta?.subheadline}</p>
+                    <button onClick={() => navigate('/register')} className="bg-wine text-white px-12 py-5 rounded-xl text-xl font-bold shadow-2xl shadow-wine/20 mb-12 hover:scale-105 transition-all">→ {content?.cta?.btnText}</button>
+                    <p className="text-sm text-primary font-bold uppercase tracking-[0.2em]">Dúvidas? <a href={`mailto:${content?.footer?.contactEmail} `} className="text-slate-900 hover:text-primary transition-colors underline decoration-primary/30">{content?.footer?.contactEmail}</a></p>
                 </div>
             </section>
 
             {/* 11. FOOTER */}
-            <footer className="bg-slate-900 text-surface py-16">
-                <div className="container-main">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
-                        <div className="col-span-2 md:col-span-1">
-                            <div className="flex items-center gap-2 mb-6">
-                                {appLogo ? (
-                                    <img src={appLogo} alt="Logo" className="h-8 w-auto object-contain" />
-                                ) : (
-                                    <span className="text-gold">✦</span>
-                                )}
-                                <span className="font-serif text-xl font-bold">{appName}</span>
+            <footer className="bg-slate-950 text-white py-20 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+                    <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]"></div>
+                </div>
+                <div className="container-main relative z-10">
+                    <div className="grid grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 mb-20">
+                        <div className="col-span-2 lg:col-span-2">
+                            <div className="flex items-center gap-3 mb-8">
+                                <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
+                                    <span className="text-xl">✦</span>
+                                </div>
+                                <span className="font-serif text-3xl font-bold tracking-tight text-white">{appName}</span>
                             </div>
-                            <p className="text-sm text-surface/90 font-medium max-w-xs">{content?.footer?.description}</p>
+                            <p className="text-slate-400 font-medium max-w-sm leading-relaxed mb-8">{content?.footer?.description}</p>
                         </div>
                         <div>
                             <h5 className="font-serif font-bold text-gold mb-4 uppercase tracking-wider text-xs">Produto</h5>
-                            <ul className="space-y-3 text-sm text-surface/90 font-medium">
+                            <ul className="space-y-3 text-sm text-slate-400 font-medium">
                                 <li><a href="#como-funciona" className="hover:text-white transition-colors">Como Funciona</a></li>
                                 <li><a href="#servicos" className="hover:text-white transition-colors">Serviços</a></li>
                                 <li><a href="#precos" className="hover:text-white transition-colors">Preços</a></li>
@@ -696,7 +723,7 @@ hr.decor {
                         </div>
                         <div>
                             <h5 className="font-serif font-bold text-gold mb-4 uppercase tracking-wider text-xs">Empresa</h5>
-                            <ul className="space-y-3 text-sm text-surface/90 font-medium">
+                            <ul className="space-y-3 text-sm text-slate-400 font-medium">
                                 <li><a href="#" className="hover:text-white transition-colors">Sobre Nós</a></li>
                                 <li><a href="#" className="hover:text-white transition-colors">Termos de Serviço</a></li>
                                 <li><a href="#" className="hover:text-white transition-colors">Privacidade</a></li>
@@ -704,7 +731,7 @@ hr.decor {
                         </div>
                         <div>
                             <h5 className="font-serif font-bold text-gold mb-4 uppercase tracking-wider text-xs">Suporte</h5>
-                            <ul className="space-y-3 text-sm text-surface/90 font-medium">
+                            <ul className="space-y-3 text-sm text-slate-400 font-medium">
                                 <li><a href="#faq" className="hover:text-white transition-colors">FAQ</a></li>
                                 <li><a href={`mailto:${content?.footer?.contactEmail} `} className="hover:text-white transition-colors">Email</a></li>
                                 {content?.footer?.socialLinks?.instagram && (
@@ -713,10 +740,9 @@ hr.decor {
                             </ul>
                         </div>
                     </div>
-                    <hr className="border-t border-surface/20 mb-8" />
-                    <div className="flex flex-col md:flex-row justify-between items-center text-xs font-medium text-surface/80">
+                    <div className="pt-16 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                         <p>{content?.footer?.copyright}</p>
-                        <p className="mt-2 md:mt-0">Desenvolvido com sofisticação em Angola 🇦🇴</p>
+                        <p className="mt-4 md:mt-0">Desenvolvido com sofisticação em Angola 🇦🇴</p>
                     </div>
                 </div>
             </footer>

@@ -10,11 +10,12 @@ export default function Dashboard() {
     const { loadSubjects, getByClient } = useSubjectsStore();
     const navigate = useNavigate();
 
-    // Load latest subjects and refresh profile credits
+    // Load latest subjects
     useEffect(() => {
-        loadSubjects();
-        refreshCurrentUser();
-    }, [loadSubjects, refreshCurrentUser]);
+        if (currentUser?.id) {
+            loadSubjects(currentUser.id);
+        }
+    }, [currentUser?.id, loadSubjects]);
 
     if (!currentUser) return null;
 
@@ -24,7 +25,7 @@ export default function Dashboard() {
     const percentage = total === 0 ? 0 : Math.round((used / total) * 100);
 
     const mySubjects = getByClient(currentUser.id).sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
     );
 
     const recentSubjects = mySubjects.slice(0, 4);

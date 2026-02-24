@@ -66,8 +66,8 @@ export default function CRM() {
     return (
         <div className="space-y-6 max-w-7xl mx-auto animate-in fade-in duration-500 pb-12">
             <div>
-                <h1 className="text-3xl font-heading font-bold glow-text mb-2">O Meu CRM</h1>
-                <p className="text-slate-500 font-medium">Faça a gestão dos clientes e aceda a todos os relatórios gerados.</p>
+                <h1 className="text-3xl font-heading font-bold glow-text mb-2">Os Meus Testes</h1>
+                <p className="text-slate-500 font-medium">Faça a gestão dos testes realizados e aceda a todos os relatórios gerados.</p>
             </div>
 
             {/* Summary Cards */}

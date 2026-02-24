@@ -11,6 +11,7 @@ export const useAuthStore = create(
 
             initialize: async () => {
                 set({ loading: true });
+                // Get initial session
                 const { data: { session } } = await supabase.auth.getSession();
 
                 if (session) {
@@ -22,12 +23,22 @@ export const useAuthStore = create(
 
                 set({ loading: false });
 
+                // Subscribe to auth changes
                 const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-                    set({ session });
-                    if (session) {
-                        await get().fetchProfile(session.user.id);
-                    } else {
-                        set({ currentUser: null });
+                    // Only update and fetch if the user actually changed to avoid redundant refreshes
+                    const currentUserId = get().session?.user?.id;
+                    const nextUserId = session?.user?.id;
+
+                    if (currentUserId !== nextUserId) {
+                        set({ session });
+                        if (session) {
+                            await get().fetchProfile(session.user.id);
+                        } else {
+                            set({ currentUser: null });
+                        }
+                    } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+                        // Occasional refreshes are okay for specific events if session stayed same
+                        set({ session });
                     }
                 });
 
@@ -77,7 +88,7 @@ export const useAuthStore = create(
 
                     set({ currentUser: get().mapProfile(data) });
                 } catch (error) {
-                    console.error("Error fetching profile:", error);
+                    console.error("DEBUG Error fetching profile for user:", userId, error);
                 }
             },
 

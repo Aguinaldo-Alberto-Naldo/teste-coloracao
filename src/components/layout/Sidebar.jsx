@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Users, UserPlus, FileText, Settings, CreditCard, LogOut, ShoppingBag, LayoutTemplate, Briefcase } from "lucide-react";
+import { LayoutDashboard, Users, UserPlus, FileText, Settings, CreditCard, LogOut, ShoppingBag, LayoutTemplate, Briefcase, Bell } from "lucide-react";
 import { useAuthStore } from "../../stores/authStore";
 import { useConfigStore } from "../../stores/configStore";
 
@@ -11,7 +11,9 @@ export default function Sidebar({ role, isMobile = false }) {
         { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
         { to: "/store", icon: ShoppingBag, label: "Loja de Créditos" },
         { to: "/subjects/new", icon: UserPlus, label: "Nova Análise" },
-        { to: "/crm", icon: Users, label: "O Meu CRM" },
+        { to: "/my-clients", icon: Users, label: "Os Meus Clientes" },
+        { to: "/crm", icon: Users, label: "Os Meus Testes" },
+        { to: "/notifications", icon: Bell, label: "Notificações" },
         { to: "/support", icon: Settings, label: "Suporte" },
     ];
 
@@ -23,6 +25,7 @@ export default function Sidebar({ role, isMobile = false }) {
         { to: "/admin/credits", icon: CreditCard, label: "Créditos" },
         { to: "/admin/packages", icon: Settings, label: "Pacotes" },
         { to: "/admin/tickets", icon: FileText, label: "Tickets de Suporte" },
+        { to: "/admin/notifications", icon: Bell, label: "Gestão de Alertas" },
         { to: "/admin/settings", icon: Settings, label: "Configurações" },
     ];
 

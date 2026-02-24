@@ -19,6 +19,9 @@ import SubjectDetail from './pages/SubjectDetail';
 import Report from './pages/Report';
 import CRM from './pages/CRM';
 import AccountSettings from './pages/AccountSettings';
+import MyClients from './pages/MyClients';
+import ClientTests from './pages/ClientTests';
+import Notifications from './pages/Notifications';
 
 // Admin Pages
 import AdminDashboard from './pages/AdminDashboard';
@@ -28,6 +31,7 @@ import AdminPackages from './pages/AdminPackages';
 import AdminLandingEditor from './pages/AdminLandingEditor'; // new
 import AdminOrders from './pages/AdminOrders'; // new
 import AdminTickets from './pages/AdminTickets';
+import AdminNotifications from './pages/AdminNotifications';
 import AdminSettings from './pages/AdminSettings';
 
 // Store
@@ -65,8 +69,11 @@ const router = createBrowserRouter([
           { path: '/subjects/:id', element: <SubjectDetail /> },
           { path: '/reports/:id', element: <Report /> },
           { path: '/crm', element: <CRM /> },
+          { path: '/my-clients', element: <MyClients /> },
+          { path: '/my-clients/:id', element: <ClientTests /> },
           { path: '/store', element: <ClientStore /> },
           { path: '/support', element: <ClientSupport /> },
+          { path: '/notifications', element: <Notifications /> },
           { path: '/settings', element: <AccountSettings /> },
         ]
       }
@@ -88,6 +95,7 @@ const router = createBrowserRouter([
           { path: 'landing', element: <AdminLandingEditor /> },
           { path: 'orders', element: <AdminOrders /> },
           { path: 'tickets', element: <AdminTickets /> },
+          { path: 'notifications', element: <AdminNotifications /> },
           { path: 'settings', element: <AdminSettings /> },
           { path: 'account', element: <AccountSettings /> },
         ]
@@ -102,17 +110,26 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  const { initialize } = useAuthStore();
+  const { initialize, currentUser } = useAuthStore();
   const { loadConfig } = useConfigStore();
   const { loadContent } = useLandingStore();
-  const { loadPackages } = useBillingStore();
+  const { loadPackages, loadOrders } = useBillingStore();
 
   useEffect(() => {
+    // initialize and loadConfig are core for the initial UI
     initialize();
     loadConfig();
-    loadContent();
-    loadPackages();
-  }, [initialize, loadConfig, loadContent, loadPackages]);
+
+    // loadContent and loadPackages are now handled lazily by the pages that need them
+    // to speed up the initial application boot and transition through AuthGuard
+  }, [initialize, loadConfig]);
+
+  useEffect(() => {
+    if (currentUser) {
+      loadPackages();
+      loadOrders(currentUser.id);
+    }
+  }, [currentUser, loadPackages, loadOrders]);
 
   return (
     <>

@@ -6,7 +6,7 @@ import { ShoppingCart, CheckCircle2, Package, History, UploadCloud, X } from "lu
 
 export default function ClientStore() {
     const { currentUser } = useAuthStore();
-    const { packages, createOrder, orders, loadOrders } = useBillingStore();
+    const { packages, loadPackages, createOrder, orders, loadOrders } = useBillingStore();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [view, setView] = useState("store"); // 'store' | 'history'
 
@@ -18,9 +18,10 @@ export default function ClientStore() {
 
     useEffect(() => {
         if (currentUser) {
+            loadPackages();
             loadOrders(currentUser.id);
         }
-    }, [currentUser, loadOrders]);
+    }, [currentUser, loadPackages, loadOrders]);
 
     if (!currentUser) return null;
 

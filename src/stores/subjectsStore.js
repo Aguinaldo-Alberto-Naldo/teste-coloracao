@@ -38,6 +38,7 @@ export const useSubjectsStore = create(
             try {
                 const newSubj = {
                     client_id: data.clientId,
+                    testable_client_id: data.testableClientId || null,
                     full_name: data.fullName,
                     phone: data.phone,
                     email: data.email,

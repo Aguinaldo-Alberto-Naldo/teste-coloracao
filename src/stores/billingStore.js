@@ -72,6 +72,27 @@ export const useBillingStore = create((set, get) => ({
 
         const updatedOrder = data[0];
 
+        // Send notification to the user about order status update
+        try {
+            const statusMap = {
+                'approved': { title: 'Pagamento Aprovado! 🎉', message: 'Os seus créditos já foram adicionados à conta.', type: 'success' },
+                'rejected': { title: 'Pagamento Rejeitado ❌', message: 'Houve um problema com o seu comprovativo. Verifique os detalhes.', type: 'warning' },
+                'pending': { title: 'Pedido em Processamento ⏳', message: 'Estamos a validar o seu comprovativo de pagamento.', type: 'info' }
+            };
+
+            const config = statusMap[newStatus] || { title: 'Atualização de Pedido', message: `O estado do seu pedido mudou para: ${newStatus}`, type: 'info' };
+
+            await supabase.from('notifications').insert([{
+                user_id: updatedOrder.user_id,
+                title: config.title,
+                message: config.message,
+                type: config.type,
+                link: '/dashboard'
+            }]);
+        } catch (notifError) {
+            console.error("Error sending order notification:", notifError);
+        }
+
         set(state => ({
             orders: state.orders.map(order =>
                 order.id === orderId ? updatedOrder : order
