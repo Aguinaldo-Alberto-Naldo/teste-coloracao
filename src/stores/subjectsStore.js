@@ -86,6 +86,29 @@ export const useSubjectsStore = create(
             }
         },
 
+        // Delete subject from Supabase
+        deleteSubject: async (id) => {
+            try {
+                const { error } = await supabase
+                    .from('subjects')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                set((state) => ({
+                    subjects: state.subjects.filter(s => s.id !== id)
+                }));
+
+                toast.success("Teste eliminado com sucesso.");
+                return true;
+            } catch (error) {
+                console.error("Error deleting subject:", error);
+                toast.error("Erro ao eliminar teste.");
+                return false;
+            }
+        },
+
         getByClient: (clientId) => {
             const { subjects } = get();
             return subjects.filter(s => s.client_id === clientId);

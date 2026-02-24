@@ -141,7 +141,11 @@ export default function Dashboard() {
                                 <p className="text-xs font-bold text-slate-500 mb-4 truncate italic">{subject.email}</p>
 
                                 <div className="text-sm font-bold text-primary group-hover:text-primary/80 transition-colors flex items-center gap-1">
-                                    Ver detalhes <ArrowRight className="w-4 h-4" />
+                                    {subject.status === "error" || subject.status === "processing" ? (
+                                        <span className="text-destructive flex items-center gap-1">Ver Problema <ArrowRight className="w-4 h-4" /></span>
+                                    ) : (
+                                        <>Ver detalhes <ArrowRight className="w-4 h-4" /></>
+                                    )}
                                 </div>
                             </div>
                         ))}

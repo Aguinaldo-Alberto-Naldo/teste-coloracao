@@ -106,21 +106,20 @@ export default function NewSubject() {
         // Prepare processing layout
         setIsProcessing(true);
 
+        let createdSubjectId = null;
+
         try {
             // 2. Upload images to Supabase Storage
             const photoUrls = [];
             for (const photoObj of photos) {
-                const file = photoObj.file; // This is the actual File object
+                const file = photoObj.file;
                 const originalName = file.name || 'photo.jpg';
                 const fileExt = originalName.split('.').pop() || 'jpg';
                 const fileName = `${currentUser.id}/${crypto.randomUUID()}.${fileExt}`;
 
                 const { data: uploadData, error: uploadError } = await supabase.storage
                     .from('photos')
-                    .upload(fileName, file, {
-                        cacheControl: '3600',
-                        upsert: false
-                    });
+                    .upload(fileName, file, { cacheControl: '3600', upsert: false });
 
                 if (uploadError) throw uploadError;
 
@@ -140,15 +139,12 @@ export default function NewSubject() {
                 photoUrls: photoUrls
             });
 
-            // 4. Deduce credits
-            if (currentUser?.role !== "admin") {
-                await updateCredits(currentUser.id, 1);
-            }
+            createdSubjectId = subject.id; // Save for potential error rollback
 
-            // 5. Run GPT-4 Vision analysis
+            // 4. Run GPT-4 Vision analysis
             const aiResult = await analyzeImagesWithVision(photoUrls, aiPrompt);
 
-            // 6. Save Report to Supabase
+            // 5. Save Report to Supabase
             const reportData = {
                 ...aiResult,
                 subjectId: subject.id,
@@ -157,7 +153,12 @@ export default function NewSubject() {
 
             const report = await addReport(reportData);
 
-            // Update subject status
+            // 6. Deduce credits ONLY after success
+            if (currentUser?.role !== "admin") {
+                await updateCredits(currentUser.id, 1);
+            }
+
+            // 7. Update subject status to completed
             await updateSubjectStatus(subject.id, "completed");
 
             // Navigate to report
@@ -167,6 +168,12 @@ export default function NewSubject() {
             console.error("DEBUG Erro na Análise:", e);
             const errorMsg = e.message || "Ocorreu um erro ao processar as fotografias.";
             toast.error(errorMsg);
+
+            // Mark subject as error so user can retry later without losing credit
+            if (createdSubjectId) {
+                await updateSubjectStatus(createdSubjectId, "error");
+            }
+
             setIsProcessing(false);
         }
     };

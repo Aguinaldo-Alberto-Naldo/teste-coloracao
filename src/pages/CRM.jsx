@@ -201,7 +201,12 @@ export default function CRM() {
                                                         Ver Relatório <ArrowUpRight className="w-3 h-3 ml-1" />
                                                     </button>
                                                 ) : (
-                                                    <span className="text-xs text-muted-foreground font-medium italic">Indisponível</span>
+                                                    <button
+                                                        onClick={() => navigate(`/subjects/${item.id}`)}
+                                                        className="inline-flex items-center text-xs font-semibold text-destructive bg-destructive/10 hover:bg-destructive/20 border border-destructive/20 px-3 py-1.5 rounded-md transition-all active:scale-95"
+                                                    >
+                                                        Resolver Problema <ArrowUpRight className="w-3 h-3 ml-1" />
+                                                    </button>
                                                 )}
                                             </td>
                                         </tr>
