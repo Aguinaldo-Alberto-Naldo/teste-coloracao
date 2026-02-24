@@ -39,8 +39,9 @@ export default function Dashboard() {
 
             <div className="grid md:grid-cols-3 gap-6">
                 {/* Credits Card */}
-                <div className="bg-card shadow-sm border border-border rounded-xl p-6 md:col-span-2 relative overflow-hidden flex flex-col justify-center">
-                    <div className="absolute right-0 top-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
+                <div className="bg-card shadow-sm border border-border rounded-xl p-6 md:col-span-2 relative overflow-hidden flex flex-col justify-center group/card">
+                    <div className="absolute right-0 top-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 group-hover/card:bg-accent/10 transition-colors duration-700" />
+                    <div className="absolute left-0 bottom-0 w-32 h-32 bg-accent/5 rounded-full blur-[50px] translate-y-1/2 -translate-x-1/2" />
 
                     <div className="flex justify-between items-start mb-6 z-10 w-full">
                         <h3 className="font-semibold text-lg text-foreground">Estado dos Créditos</h3>
@@ -57,12 +58,12 @@ export default function Dashboard() {
                             <p className="text-2xl font-bold text-foreground">{total}</p>
                         </div>
                         <div className="bg-background/80 p-4 rounded-lg border border-border/50 text-center shadow-sm">
-                            <p className="text-sm font-bold text-slate-500 uppercase tracking-tight mb-1">Usados</p>
+                            <p className="text-sm font-bold text-slate-400 uppercase tracking-tight mb-1">Usados</p>
                             <p className="text-2xl font-bold text-foreground">{used}</p>
                         </div>
-                        <div className="bg-primary/5 p-4 rounded-lg border border-primary/20 text-center shadow-inner">
+                        <div className="bg-primary/10 p-4 rounded-lg border border-primary/20 text-center shadow-[inset_0_2px_10px_rgba(124,58,237,0.05)]">
                             <p className="text-sm font-bold text-primary uppercase tracking-tight mb-1">Disponíveis</p>
-                            <p className="text-2xl font-bold text-primary">{available}</p>
+                            <p className="text-2xl font-bold text-primary drop-shadow-sm">{available}</p>
                         </div>
                     </div>
 
@@ -89,7 +90,7 @@ export default function Dashboard() {
                     <p className="text-sm text-slate-500 font-medium mb-6">Submeta fotos para gerar um novo relatório.</p>
                     <button
                         onClick={() => navigate('/subjects/new')}
-                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3 px-4 rounded-lg transition-colors shadow-sm"
+                        className="w-full bg-gradient-to-r from-[#db2777] to-[#4f46e5] hover:scale-[1.02] text-white font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-primary/20 active:scale-95"
                     >
                         Adicionar Pessoa
                     </button>
@@ -124,11 +125,13 @@ export default function Dashboard() {
                         {recentSubjects.map(subject => (
                             <div
                                 key={subject.id}
-                                className="bg-card border border-border rounded-xl p-5 hover:border-primary/50 hover:shadow-md transition-all cursor-pointer group"
+                                className="bg-card border border-border rounded-xl p-5 hover:border-primary/40 hover:shadow-[0_10px_30px_rgba(124,58,237,0.15)] transition-all cursor-pointer group relative overflow-hidden"
                                 onClick={() => navigate(`/subjects/${subject.id}`)}
                             >
                                 <div className="flex justify-between items-start mb-4">
-                                    <div className="w-12 h-12 rounded-full bg-secondary border border-border flex items-center justify-center overflow-hidden">
+                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center overflow-hidden border-2 transition-transform duration-500 group-hover:scale-110 ${subject.status === "error" ? "bg-destructive/10 border-destructive/20" :
+                                            subject.status === "concluído" ? "bg-success/10 border-success/20" : "bg-primary/10 border-primary/20"
+                                        }`}>
                                         {subject.photoUrls?.[0] ? (
                                             <img src={subject.photoUrls[0]} alt="Avatar" className="w-full h-full object-cover" />
                                         ) : (
@@ -139,7 +142,11 @@ export default function Dashboard() {
                                 </div>
 
                                 <h4 className="font-bold text-foreground truncate">{subject.full_name || "Sem Nome"}</h4>
-                                <p className="text-xs font-bold text-slate-500 mb-4 truncate italic">{subject.email}</p>
+                                <p className="text-xs font-bold text-slate-400 mb-4 truncate italic">{subject.email}</p>
+
+                                <div className={`h-1 w-full absolute bottom-0 left-0 transition-all ${subject.status === "error" ? "bg-destructive/50" :
+                                        subject.status === "concluído" ? "bg-success/50" : "bg-primary/50"
+                                    } opacity-0 group-hover:opacity-100`} />
 
                                 <div className="text-sm font-bold text-primary group-hover:text-primary/80 transition-colors flex items-center gap-1">
                                     {subject.status === "error" || subject.status === "processing" ? (
