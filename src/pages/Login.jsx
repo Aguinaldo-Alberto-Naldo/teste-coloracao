@@ -6,6 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../stores/authStore";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import authVisual from "../assets/auth_visual.png";
 
 const loginSchema = z.object({
     email: z.string().email("Email inválido"),
@@ -49,26 +50,33 @@ export default function Login() {
     return (
         <div className="min-h-screen flex flex-col md:flex-row bg-background">
             {/* Visual Section */}
-            <div className="hidden md:flex md:w-1/2 relative bg-surface overflow-hidden order-2 md:order-1 items-center justify-center border-r border-border">
+            <div className="hidden md:flex md:w-1/2 relative bg-slate-900 overflow-hidden order-2 md:order-1 items-center justify-center border-r border-border">
                 {/* Background image base */}
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=2074&auto=format&fit=crop')] bg-cover bg-center opacity-5 mix-blend-multiply"></div>
+                <div
+                    className="absolute inset-0 bg-cover bg-center opacity-40 bg-no-repeat"
+                    style={{ backgroundImage: `url(${authVisual})` }}
+                ></div>
+
+                {/* Dramatic Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
 
                 {/* Animated Orbs */}
-                <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-primary/10 rounded-full blur-[100px] mix-blend-multiply orb" />
-                <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-accent/10 rounded-full blur-[80px] mix-blend-multiply orb-delayed" />
+                <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-primary/20 rounded-full blur-[100px] mix-blend-screen animate-pulse" />
+                <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-accent/20 rounded-full blur-[80px] mix-blend-screen animate-pulse delay-700" />
 
-                <div className="z-10 text-center px-12 relative">
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white/40 border border-white/60 backdrop-blur-md mb-8 shadow-xl animate-in slide-in-from-bottom-4">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-10 h-10 text-primary drop-shadow-sm">
+                <div className="z-10 text-center px-12 relative max-w-2xl">
+                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-white/10 border border-white/20 backdrop-blur-xl mb-10 shadow-2xl animate-in zoom-in-50 duration-700">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="w-12 h-12 text-white drop-shadow-2xl">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
                         </svg>
                     </div>
 
-                    <h1 className="text-5xl lg:text-7xl font-bold font-heading mb-6 text-foreground leading-tight tracking-tight">
-                        Descubra as <br /> <span className="text-primary glow-text">Suas Cores</span>
+                    <h1 className="text-5xl lg:text-6xl font-black font-heading mb-8 text-white leading-tight tracking-[calc(var(--tracking-tight)*-2)]">
+                        Transforme o seu <br /> <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Olhar pela Cor</span>
                     </h1>
-                    <p className="text-lg text-muted-foreground max-w-md mx-auto">
-                        Plataforma de inteligência artificial futurista focada em potenciar a sua beleza natural através da colorimetria avançada.
+                    <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto mb-8 rounded-full" />
+                    <p className="text-xl text-slate-300 font-medium leading-relaxed">
+                        A ciência da corometria avançada com IA, <br className="hidden lg:block" /> desenhada para elevar o seu potencial estético.
                     </p>
                 </div>
             </div>

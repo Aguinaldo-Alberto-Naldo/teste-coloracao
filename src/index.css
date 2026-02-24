@@ -33,6 +33,7 @@
   /* borders nítidas */
   --color-input: #cbd5e1;
   --color-ring: #7c3aed;
+  --color-gold: #D4AF37;
 
   --font-heading: "Playfair Display", serif;
   --font-sans: "Lato", sans-serif;
@@ -98,6 +99,7 @@ h6 {
   --border: #cbd5e1;
   --input: #cbd5e1;
   --ring: #7c3aed;
+  --gold: #D4AF37;
   --radius: 0.75rem;
 }
 

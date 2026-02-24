@@ -6,6 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../stores/authStore";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import authVisual from "../assets/auth_visual.png";
 
 const registerSchema = z.object({
     fullName: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
@@ -118,17 +119,29 @@ export default function Register() {
             </div>
 
             {/* Visual Section */}
-            <div className="hidden md:flex md:w-1/2 relative bg-secondary overflow-hidden order-2 items-center justify-center border-l border-border">
-                <div className="absolute inset-0 bg-gradient-to-tr from-accent/20 to-background opacity-80" />
-                <div className="z-10 text-center px-12">
-                    <h1 className="text-5xl lg:text-7xl font-bold font-heading mb-6 text-foreground leading-tight">
-                        Colorimetria <br /> <span className="text-primary glow-text">de Excelência</span>
+            <div className="hidden md:flex md:w-1/2 relative bg-slate-900 overflow-hidden order-2 items-center justify-center border-l border-border">
+                {/* Background image base */}
+                <div
+                    className="absolute inset-0 bg-cover bg-center opacity-40 bg-no-repeat"
+                    style={{ backgroundImage: `url(${authVisual})` }}
+                ></div>
+
+                {/* Dramatic Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-slate-900 via-slate-900/40 to-transparent" />
+
+                {/* Animated Orbs */}
+                <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-accent/20 rounded-full blur-[100px] mix-blend-screen animate-pulse" />
+                <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-primary/20 rounded-full blur-[80px] mix-blend-screen animate-pulse delay-700" />
+
+                <div className="z-10 text-center px-12 relative max-w-2xl">
+                    <h1 className="text-5xl lg:text-6xl font-black font-heading mb-8 text-white leading-tight tracking-[calc(var(--tracking-tight)*-2)]">
+                        O Início da sua <br /> <span className="bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">Jornada Cromática</span>
                     </h1>
-                    <p className="text-lg text-muted-foreground max-w-md mx-auto">
+                    <div className="w-24 h-1 bg-gradient-to-r from-accent to-primary mx-auto mb-8 rounded-full" />
+                    <p className="text-xl text-slate-300 font-medium leading-relaxed">
                         Aumente a sua faturação e proporcione uma experiência única aos seus clientes com análises precisas e automatizadas.
                     </p>
                 </div>
-                <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-accent/40 rounded-full blur-[100px] mix-blend-multiply" />
             </div>
         </div>
     );
