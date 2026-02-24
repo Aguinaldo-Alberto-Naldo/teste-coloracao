@@ -44,23 +44,23 @@ export default function TopBar({ onMenuClick }) {
 
     return (
         <header className={`h-16 border-b backdrop-blur-md flex items-center justify-between px-4 md:px-8 sticky top-0 z-40 transition-all duration-500 ${isAdmin
-            ? "bg-slate-900 border-gold/30 shadow-[0_4px_20px_rgba(212,175,55,0.1)]"
-            : "bg-card/80 border-border shadow-sm"
+            ? "bg-slate-950 border-gold/40 shadow-[0_4px_30px_rgba(212,175,55,0.2)]"
+            : "bg-primary border-white/10 shadow-lg shadow-primary/10"
             }`}>
             <div className="flex items-center gap-4">
                 <button
                     onClick={onMenuClick}
                     className={`md:hidden p-2 rounded-lg transition-colors border border-transparent ${isAdmin
                         ? "text-slate-300 hover:bg-white/10 hover:border-gold/20"
-                        : "text-foreground hover:bg-secondary hover:border-border"
+                        : "text-white/90 hover:bg-white/10 hover:border-white/10"
                         }`}
                     aria-label="Abrir Menu"
                 >
                     <Menu className="w-6 h-6" />
                 </button>
                 <div className="hidden md:flex items-center gap-3">
-                    <div className={`text-sm font-medium ${isAdmin ? "text-slate-400" : "text-slate-500"}`}>
-                        Olá, <span className={`font-bold ${isAdmin ? "text-white" : "text-foreground"}`}>{currentUser.fullName}</span>
+                    <div className={`text-sm font-medium ${isAdmin ? "text-slate-400" : "text-white/70"}`}>
+                        Olá, <span className={`font-bold ${isAdmin ? "text-white" : "text-white"}`}>{currentUser.fullName}</span>
                     </div>
                     {isAdmin && (
                         <span className="px-2 py-0.5 rounded-full bg-gold/10 border border-gold/20 text-[10px] font-black text-gold uppercase tracking-widest animate-pulse">
@@ -73,8 +73,8 @@ export default function TopBar({ onMenuClick }) {
             <div className="flex items-center gap-4">
                 {currentUser.role !== "admin" && (
                     <div className="flex flex-col items-end mr-2 hidden sm:flex">
-                        <span className="text-[11px] text-slate-500 font-bold uppercase tracking-tight">Créditos Disponíveis</span>
-                        <span className="text-sm font-bold text-primary">
+                        <span className="text-[11px] text-white/60 font-bold uppercase tracking-tight">Créditos Disponíveis</span>
+                        <span className="text-sm font-bold text-white drop-shadow-sm">
                             {creditsAvailable} {creditsAvailable === 1 ? 'teste' : 'testes'}
                         </span>
                     </div>
@@ -85,13 +85,13 @@ export default function TopBar({ onMenuClick }) {
                     <DropdownMenuTrigger asChild>
                         <button className={`relative p-2 rounded-full transition-colors outline-none ${isAdmin
                             ? "text-slate-400 hover:text-white hover:bg-white/10"
-                            : "text-slate-500 hover:text-foreground hover:bg-secondary"
+                            : "text-white/80 hover:text-white hover:bg-white/10"
                             }`}>
                             <Bell className="w-5 h-5" />
                             {unreadCount > 0 && (
                                 <span className={`absolute top-1.5 right-1.5 w-4 h-4 text-[10px] font-bold text-white rounded-full border flex items-center justify-center ${isAdmin
                                     ? "bg-gold border-slate-900"
-                                    : "bg-destructive border-card"
+                                    : "bg-accent border-primary"
                                     }`}>
                                     {unreadCount > 9 ? '9+' : unreadCount}
                                 </span>
@@ -160,19 +160,19 @@ export default function TopBar({ onMenuClick }) {
                     <DropdownMenuTrigger asChild>
                         <button className={`flex items-center gap-2 p-1.5 border rounded-full transition-all outline-none ${isAdmin
                             ? "bg-white/5 border-gold/30 hover:bg-white/10 hover:border-gold/50"
-                            : "bg-card border-border hover:shadow-md"
+                            : "bg-white/10 border-white/20 hover:bg-white/20 hover:border-white/30"
                             }`}>
                             <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shadow-sm ${isAdmin
                                 ? "bg-gold text-slate-900"
-                                : "bg-primary text-white"
+                                : "bg-white text-primary"
                                 }`}>
                                 {initial}
                             </div>
                             <div className="hidden sm:block text-left mr-1">
-                                <p className={`text-[11px] font-black uppercase tracking-tighter leading-none mb-0.5 ${isAdmin ? "text-gold" : "text-primary"}`}>
+                                <p className={`text-[11px] font-black uppercase tracking-tighter leading-none mb-0.5 ${isAdmin ? "text-gold" : "text-white"}`}>
                                     {isAdmin ? "Admin" : "Cliente"}
                                 </p>
-                                <p className={`text-[10px] font-medium leading-none ${isAdmin ? "text-slate-400" : "text-slate-500 text-truncate max-w-[80px]"}`}>
+                                <p className={`text-[10px] font-medium leading-none ${isAdmin ? "text-slate-400" : "text-white/70 text-truncate max-w-[80px]"}`}>
                                     {currentUser.fullName.split(' ')[0]}
                                 </p>
                             </div>
