@@ -97,15 +97,33 @@ export default function SubjectDetail() {
         }
     };
 
+    const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const handleDelete = async () => {
-        if (!window.confirm("Tem a certeza que deseja eliminar este teste? Esta ação é irreversível.")) return;
+        if (!showConfirmDelete) {
+            setShowConfirmDelete(true);
+            setTimeout(() => setShowConfirmDelete(false), 3000); // Reset after 3 seconds
+            return;
+        }
 
         setIsDeleting(true);
-        const success = await deleteSubject(subject.id);
-        if (success) {
-            navigate('/crm');
-        } else {
+        console.log("Attempting to delete subject with ID:", id, "and subject.id:", subject?.id);
+
+        try {
+            // Use the ID from params as primary, subject.id as backup
+            const targetId = id || subject?.id;
+            const success = await deleteSubject(targetId);
+
+            if (success) {
+                navigate('/crm');
+            } else {
+                setIsDeleting(false);
+                setShowConfirmDelete(false);
+            }
+        } catch (err) {
+            console.error("Component level deletion error:", err);
+            toast.error("Erro inesperado ao processar pedido.");
             setIsDeleting(false);
+            setShowConfirmDelete(false);
         }
     };
 
@@ -176,9 +194,18 @@ export default function SubjectDetail() {
                     <button
                         onClick={handleDelete}
                         disabled={isRetrying || isDeleting}
-                        className="sm:flex-none bg-white hover:bg-destructive/5 text-destructive border-2 border-destructive/20 hover:border-destructive/40 font-bold py-4 px-8 rounded-2xl transition-all shadow-lg shadow-destructive/5 flex items-center justify-center active:scale-95 disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed uppercase tracking-wider text-sm"
+                        className={`sm:flex-none font-bold py-4 px-8 rounded-2xl transition-all shadow-lg flex items-center justify-center active:scale-95 disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed uppercase tracking-wider text-sm ${showConfirmDelete
+                                ? "bg-destructive text-white shadow-destructive/20"
+                                : "bg-white hover:bg-destructive/5 text-destructive border-2 border-destructive/20 hover:border-destructive/40 shadow-destructive/5"
+                            }`}
                     >
-                        {isDeleting ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Trash2 className="w-5 h-5 mr-2" /> Eliminar</>}
+                        {isDeleting ? (
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : showConfirmDelete ? (
+                            "Confirmar Eliminação?"
+                        ) : (
+                            <><Trash2 className="w-5 h-5 mr-2" /> Eliminar</>
+                        )}
                     </button>
                 </div>
             </div>
