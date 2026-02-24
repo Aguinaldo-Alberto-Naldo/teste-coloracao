@@ -452,7 +452,7 @@ hr.decor {
                             <div className="grid grid-cols-3 gap-8 pt-8 border-t border-slate-200">
                                 {content?.hero?.stats?.map((stat, i) => (
                                     <div key={i} className="space-y-1" data-animate data-count-to>
-                                        <div className="text-4xl font-bold text-slate-900 stat-number" data-val={stat.val} data-suffix={stat.suffix}>0</div>
+                                        <div className="text-4xl font-bold text-slate-900 stat-number" data-val={stat.value} data-suffix={stat.suffix}>0</div>
                                         <div className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{stat.label}</div>
                                     </div>
                                 ))}
