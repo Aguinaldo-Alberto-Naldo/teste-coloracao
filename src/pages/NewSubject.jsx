@@ -43,6 +43,50 @@ function WarningModal({ title, message, onClose }) {
     );
 }
 
+// Modal Component for Photo Guidelines
+function PhotoGuidelinesModal({ onConfirm }) {
+    return (
+        <div className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-500">
+            <div className="bg-white rounded-[2.5rem] max-w-md w-full p-10 text-center animate-in zoom-in-95 duration-300 shadow-[0_40px_100px_rgba(0,0,0,0.2)] border border-slate-100 overflow-hidden relative">
+                {/* Decorative background element */}
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-accent to-gold" />
+
+                <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-8 rotate-3 transition-transform hover:rotate-6">
+                    <span className="text-4xl text-primary">✨</span>
+                </div>
+
+                <h3 className="text-3xl font-black font-heading mb-6 text-slate-900 leading-tight">Dicas para uma<br />Análise Perfeita</h3>
+
+                <div className="space-y-4 mb-10 text-left">
+                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 transition-colors hover:bg-white hover:border-primary/20 group">
+                        <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0 text-sm font-bold text-primary group-hover:scale-110 transition-transform">1</div>
+                        <p className="text-slate-600 font-semibold leading-snug">Sem maquilhagem para cores reais do seu rosto.</p>
+                    </div>
+                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 transition-colors hover:bg-white hover:border-primary/20 group">
+                        <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0 text-sm font-bold text-primary group-hover:scale-110 transition-transform">2</div>
+                        <p className="text-slate-600 font-semibold leading-snug">Lugar com boa iluminação natural.</p>
+                    </div>
+                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 transition-colors hover:bg-white hover:border-primary/20 group">
+                        <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0 text-sm font-bold text-primary group-hover:scale-110 transition-transform">3</div>
+                        <p className="text-slate-600 font-semibold leading-snug">Rosto bem visível e de frente.</p>
+                    </div>
+                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 transition-colors hover:bg-white hover:border-primary/20 group">
+                        <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0 text-sm font-bold text-primary group-hover:scale-110 transition-transform">4</div>
+                        <p className="text-slate-600 font-semibold leading-snug text-primary">Envie pelo menos duas fotos para melhor resultado.</p>
+                    </div>
+                </div>
+
+                <button
+                    onClick={onConfirm}
+                    className="w-full bg-slate-900 hover:bg-black text-white font-black py-5 rounded-2xl shadow-xl shadow-slate-200 transition-all active:scale-[0.98] uppercase tracking-[0.2em] text-sm"
+                >
+                    Entendi, Vamos Começar
+                </button>
+            </div>
+        </div>
+    );
+}
+
 // Processing Overlay Component
 function ProcessingOverlay() {
     return (
@@ -72,6 +116,7 @@ export default function NewSubject() {
     const [photos, setPhotos] = useState([]);
     const [isProcessing, setIsProcessing] = useState(false);
     const [showCreditWarning, setShowCreditWarning] = useState(false);
+    const [showGuidelines, setShowGuidelines] = useState(true);
 
     // Client selection mode: 'existing' or 'new'
     const [clientMode, setClientMode] = useState('existing');
@@ -240,8 +285,8 @@ export default function NewSubject() {
                                 disabled={clients.length === 0}
                                 onClick={() => setClientMode('existing')}
                                 className={`flex-1 flex items-center justify-center py-2.5 rounded-lg text-sm font-bold transition-all ${clientMode === 'existing'
-                                        ? 'bg-background shadow text-foreground'
-                                        : 'text-muted-foreground hover:text-foreground disabled:opacity-50 disabled:cursor-not-allowed'
+                                    ? 'bg-background shadow text-foreground'
+                                    : 'text-muted-foreground hover:text-foreground disabled:opacity-50 disabled:cursor-not-allowed'
                                     }`}
                             >
                                 <Users className="w-4 h-4 mr-2" />
@@ -251,8 +296,8 @@ export default function NewSubject() {
                                 type="button"
                                 onClick={() => setClientMode('new')}
                                 className={`flex-1 flex items-center justify-center py-2.5 rounded-lg text-sm font-bold transition-all ${clientMode === 'new'
-                                        ? 'bg-background shadow text-foreground'
-                                        : 'text-muted-foreground hover:text-foreground'
+                                    ? 'bg-background shadow text-foreground'
+                                    : 'text-muted-foreground hover:text-foreground'
                                     }`}
                             >
                                 <UserPlus className="w-4 h-4 mr-2" />
@@ -349,6 +394,10 @@ export default function NewSubject() {
             )}
 
             {isProcessing && <ProcessingOverlay />}
+
+            {showGuidelines && (
+                <PhotoGuidelinesModal onConfirm={() => setShowGuidelines(false)} />
+            )}
         </>
     );
 }
