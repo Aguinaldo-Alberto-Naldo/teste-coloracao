@@ -4,13 +4,25 @@ import { toast } from "sonner";
 import { Save, RefreshCw, ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
 
 export default function AdminLandingEditor() {
-    const { content, updateContent, resetContent } = useLandingStore();
-    const [formData, setFormData] = useState(content);
+    const { content, loadContent, loading, updateContent, resetContent } = useLandingStore();
+    const [formData, setFormData] = useState(null);
     const [expandedSection, setExpandedSection] = useState('hero');
 
     useEffect(() => {
-        setFormData(content);
-    }, [content]);
+        if (!content) {
+            loadContent();
+        } else {
+            setFormData(content);
+        }
+    }, [content, loadContent]);
+
+    if (loading || !formData) {
+        return (
+            <div className="flex items-center justify-center py-20">
+                <RefreshCw className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        );
+    }
 
     const handleChange = (section, field, value) => {
         setFormData(prev => ({
