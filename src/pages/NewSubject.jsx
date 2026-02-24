@@ -47,45 +47,45 @@ function WarningModal({ title, message, onClose }) {
 function PhotoGuidelinesModal({ onConfirm }) {
     return (
         <div className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-500">
-            <div className="bg-white rounded-[2.5rem] max-w-md w-full p-10 text-center animate-in zoom-in-95 duration-300 shadow-[0_40px_100px_rgba(0,0,0,0.2)] border border-slate-100 overflow-hidden relative">
+            <div className="bg-white rounded-[2rem] max-w-sm w-full p-6 text-center animate-in zoom-in-95 duration-300 shadow-[0_40px_100px_rgba(0,0,0,0.2)] border border-slate-100 overflow-hidden relative">
                 {/* Decorative background element */}
-                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-accent to-gold" />
+                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-accent to-gold" />
 
-                <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-8 rotate-3 transition-transform hover:rotate-6">
-                    <span className="text-4xl text-primary">✨</span>
+                <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 rotate-3">
+                    <span className="text-2xl text-primary">✨</span>
                 </div>
 
-                <h3 className="text-3xl font-black font-heading mb-6 text-slate-900 leading-tight">Dicas para uma<br />Análise Perfeita</h3>
+                <h3 className="text-xl font-black font-heading mb-4 text-slate-900 leading-tight uppercase tracking-tight">Análise Perfeita</h3>
 
-                <div className="space-y-4 mb-10 text-left">
-                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 transition-colors hover:bg-white hover:border-primary/20 group">
-                        <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0 text-sm font-bold text-primary group-hover:scale-110 transition-transform">1</div>
-                        <p className="text-slate-600 font-semibold leading-snug">Sem maquilhagem para cores reais do seu rosto.</p>
+                <div className="space-y-2 mb-6 text-left">
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 group">
+                        <div className="w-6 h-6 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0 text-[10px] font-bold text-primary">1</div>
+                        <p className="text-slate-600 font-semibold text-xs leading-snug">Sem maquilhagem para cores reais.</p>
                     </div>
-                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 transition-colors hover:bg-white hover:border-primary/20 group">
-                        <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0 text-sm font-bold text-primary group-hover:scale-110 transition-transform">2</div>
-                        <p className="text-slate-600 font-semibold leading-snug">Lugar com boa iluminação natural.</p>
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 group">
+                        <div className="w-6 h-6 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0 text-[10px] font-bold text-primary">2</div>
+                        <p className="text-slate-600 font-semibold text-xs leading-snug">Lugar com boa iluminação natural.</p>
                     </div>
-                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 transition-colors hover:bg-white hover:border-primary/20 group">
-                        <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0 text-sm font-bold text-primary group-hover:scale-110 transition-transform">3</div>
-                        <p className="text-slate-600 font-semibold leading-snug">Rosto bem visível e de frente.</p>
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 group">
+                        <div className="w-6 h-6 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0 text-[10px] font-bold text-primary">3</div>
+                        <p className="text-slate-600 font-semibold text-xs leading-snug">Rosto bem visível e de frente.</p>
                     </div>
-                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 transition-colors hover:bg-white hover:border-primary/20 group">
-                        <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0 text-sm font-bold text-primary group-hover:scale-110 transition-transform">4</div>
-                        <p className="text-slate-600 font-semibold leading-snug text-primary">Envie pelo menos duas fotos para melhor resultado.</p>
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 group">
+                        <div className="w-6 h-6 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0 text-[10px] font-bold text-primary">4</div>
+                        <p className="text-primary font-bold text-xs leading-snug">Envie 2+ fotos para melhor resultado.</p>
                     </div>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-3">
                     <button
                         onClick={() => onConfirm(false)}
-                        className="w-full bg-slate-900 hover:bg-black text-white font-black py-5 rounded-2xl shadow-xl shadow-slate-200 transition-all active:scale-[0.98] uppercase tracking-[0.2em] text-sm"
+                        className="w-full bg-slate-900 hover:bg-black text-white font-black py-3.5 rounded-xl shadow-lg shadow-slate-200 transition-all active:scale-[0.98] uppercase tracking-[0.1em] text-xs"
                     >
                         Entendi, Vamos Começar
                     </button>
                     <button
                         onClick={() => onConfirm(true)}
-                        className="w-full bg-slate-50 hover:bg-slate-100 text-slate-500 font-bold py-3.5 rounded-xl transition-all text-sm hover:text-slate-700"
+                        className="w-full bg-slate-50 hover:bg-slate-100 text-slate-400 font-bold py-2 rounded-lg transition-all text-[11px] hover:text-slate-600 uppercase tracking-tighter"
                     >
                         Não mostrar novamente
                     </button>
