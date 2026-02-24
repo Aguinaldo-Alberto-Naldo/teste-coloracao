@@ -5,7 +5,7 @@ import { Plus, MessageSquare, Send, AlertCircle } from "lucide-react";
 
 export default function ClientSupport() {
     const { currentUser } = useAuthStore();
-    const { tickets, createTicket, addReply } = useTicketsStore();
+    const { tickets, loadTickets, createTicket, addReply, loading } = useTicketsStore();
 
     const [isCreating, setIsCreating] = useState(false);
     const [newSubject, setNewSubject] = useState("");
@@ -13,6 +13,12 @@ export default function ClientSupport() {
     const [selectedTicketId, setSelectedTicketId] = useState(null);
     const [replyText, setReplyText] = useState("");
     const messagesEndRef = useRef(null);
+
+    useEffect(() => {
+        if (currentUser?.id) {
+            loadTickets(currentUser.id);
+        }
+    }, [currentUser?.id, loadTickets]);
 
     const selectedTicket = tickets.find(t => t.id === selectedTicketId);
 
@@ -28,22 +34,32 @@ export default function ClientSupport() {
 
     const myTickets = tickets.filter(t => t.user_id === currentUser.id || t.user_email === currentUser.email);
 
-    const handleCreateTicket = (e) => {
+    const handleCreateTicket = async (e) => {
         e.preventDefault();
         if (!newSubject.trim() || !newMessage.trim()) return;
 
-        const ticket = createTicket(currentUser.id, currentUser.email, newSubject, newMessage);
-        setNewSubject("");
-        setNewMessage("");
-        setIsCreating(false);
-        setSelectedTicketId(ticket.id);
+        try {
+            const ticket = await createTicket(currentUser.id, currentUser.email, newSubject, newMessage);
+            setNewSubject("");
+            setNewMessage("");
+            setIsCreating(false);
+            if (ticket?.id) {
+                setSelectedTicketId(ticket.id);
+            }
+        } catch (error) {
+            console.error("Error creating ticket:", error);
+        }
     };
 
-    const handleReply = (e) => {
+    const handleReply = async (e) => {
         e.preventDefault();
         if (!replyText.trim() || !selectedTicket) return;
-        addReply(selectedTicket.id, replyText, false);
-        setReplyText("");
+        try {
+            await addReply(selectedTicket.id, currentUser.id, replyText, false);
+            setReplyText("");
+        } catch (error) {
+            console.error("Error sending reply:", error);
+        }
     };
 
     const getStatusStyle = (status) => {
@@ -208,7 +224,7 @@ export default function ClientSupport() {
                             {/* Original Message */}
                             <div className="flex gap-4 flex-row-reverse">
                                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary shrink-0">
-                                    {currentUser.fullName[0].toUpperCase()}
+                                    {(currentUser.fullName || currentUser.email || 'U')[0].toUpperCase()}
                                 </div>
                                 <div className="bg-primary/5 border border-primary/20 rounded-2xl rounded-tr-none p-4 max-w-[80%] shadow-sm ml-auto">
                                     <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">{selectedTicket.message}</p>
@@ -219,7 +235,7 @@ export default function ClientSupport() {
                             {(selectedTicket.ticket_replies || []).map((reply) => (
                                 <div key={reply.id} className={`flex gap-4 ${!reply.is_from_admin ? 'flex-row-reverse' : ''}`}>
                                     <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0 ${reply.is_from_admin ? 'bg-accent/20 text-accent-foreground' : 'bg-primary/10 text-primary'}`}>
-                                        {reply.is_from_admin ? 'A' : currentUser.fullName[0].toUpperCase()}
+                                        {reply.is_from_admin ? 'A' : (currentUser.fullName || currentUser.email || 'U')[0].toUpperCase()}
                                     </div>
                                     <div className={`border rounded-2xl p-4 max-w-[80%] shadow-sm ${!reply.is_from_admin ? 'bg-primary/5 border-primary/20 rounded-tr-none ml-auto' : 'bg-card border-border rounded-tl-none'}`}>
                                         <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">{reply.text}</p>
