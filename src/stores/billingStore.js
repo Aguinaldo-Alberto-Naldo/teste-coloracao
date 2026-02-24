@@ -70,7 +70,21 @@ export const useBillingStore = create((set, get) => ({
 
         if (error) throw error;
 
-        const updatedOrder = data[0];
+        // If data is empty, it means no rows were updated or RLS prevented reading the result.
+        // We handle this by updating the local state manually if we don't get the row back.
+        let updatedOrder = data && data.length > 0 ? data[0] : null;
+
+        if (!updatedOrder) {
+            // Fallback: try to find the order in existing state and update its status
+            const existingOrder = get().orders.find(o => o.id === orderId);
+            if (existingOrder) {
+                updatedOrder = { ...existingOrder, status: newStatus };
+            }
+        }
+
+        if (!updatedOrder) {
+            throw new Error("Não foi possível encontrar ou atualizar o pedido.");
+        }
 
         // Send notification to the user about order status update
         try {
@@ -82,15 +96,17 @@ export const useBillingStore = create((set, get) => ({
 
             const config = statusMap[newStatus] || { title: 'Atualização de Pedido', message: `O estado do seu pedido mudou para: ${newStatus}`, type: 'info' };
 
-            await supabase.from('notifications').insert([{
-                user_id: updatedOrder.user_id,
-                title: config.title,
-                message: config.message,
-                type: config.type,
-                link: '/dashboard'
-            }]);
+            if (updatedOrder.user_id) {
+                await supabase.from('notifications').insert([{
+                    user_id: updatedOrder.user_id,
+                    title: config.title,
+                    message: config.message,
+                    type: config.type,
+                    link: '/dashboard'
+                }]);
+            }
         } catch (notifError) {
-            console.error("Error sending order notification:", notifError);
+            console.error("DEBUG Error sending order notification:", notifError);
         }
 
         set(state => ({

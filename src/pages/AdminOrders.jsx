@@ -30,7 +30,7 @@ export default function AdminOrders() {
         loadData();
     }, []);
 
-    const pendingOrders = orders.filter(order => order.status === 'pending').filter(order => {
+    const pendingOrders = orders.filter(order => order && order.status === 'pending').filter(order => {
         const client = clients.find(c => c.id === order.user_id);
         const name = client ? (client.full_name || "").toLowerCase() : "";
         const packName = (order.package_name || "").toLowerCase();
@@ -39,13 +39,19 @@ export default function AdminOrders() {
     });
 
     const handleApprove = async (order) => {
+        if (!order) return;
         if (window.confirm(`Tem a certeza que deseja aprovar o pacote de ${order.credits} testes? O saldo do utilizador será incrementado de imediato.`)) {
             const toastId = toast.loading("A aprovar pedido...");
             try {
-                await updateOrderStatus(order.id, 'approved');
-                await addCredits(order.user_id, order.credits, order.package_name);
-                toast.success("Pedido aprovado e créditos atribuídos!", { id: toastId });
-                setViewingProof(null);
+                // IMPORTANT: updateOrderStatus must complete successfully before addCredits
+                const updated = await updateOrderStatus(order.id, 'approved');
+                if (updated) {
+                    await addCredits(order.user_id, order.credits, order.package_name);
+                    toast.success("Pedido aprovado e créditos atribuídos!", { id: toastId });
+                    setViewingProof(null);
+                } else {
+                    throw new Error("Falha ao atualizar estado do pedido.");
+                }
             } catch (error) {
                 console.error("DEBUG:", error);
                 const msg = error?.message || error?.error_description || JSON.stringify(error) || "Desconhecido";
