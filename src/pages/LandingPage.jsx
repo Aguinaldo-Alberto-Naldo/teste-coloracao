@@ -144,8 +144,8 @@ export default function LandingPage() {
                     --slate-200: #e2e8f0;
                     --slate-100: #f1f5f9;
                     --white: #ffffff;
-                    --wine: #6b1f2a;
-                    --wine-light: #8b3a4a;
+                    --magenta: #db2777;
+                    --magenta-light: #f472b6;
                     --primary: #7c3aed; /* Vibrant Purple */
                     --primary-light: #a78bfa;
                     --primary-dark: #5b21b6;
@@ -160,10 +160,10 @@ export default function LandingPage() {
                     background-color: var(--bg-page);
                 }
 
-                .bg-wine { background-color: var(--wine); }
+                .bg-magenta { background-color: var(--magenta); }
                 .bg-gold { background-color: var(--gold); }
                 .bg-primary { background-color: var(--primary); }
-                .text-wine { color: var(--wine); }
+                .text-magenta { color: var(--magenta); }
                 .text-gold { color: var(--gold); }
                 .text-primary { color: var(--primary); }
                 .text-ink { color: var(--ink); }
@@ -183,7 +183,7 @@ export default function LandingPage() {
                     background-image: 
                         radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.04) 0%, transparent 40%),
                         radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.04) 0%, transparent 40%),
-                        radial-gradient(circle at 50% 50%, rgba(107, 31, 42, 0.03) 0%, transparent 60%);
+                        radial-gradient(circle at 50% 50%, rgba(219, 39, 119, 0.03) 0%, transparent 60%);
                     background-attachment: fixed;
                 }
 
@@ -227,19 +227,21 @@ export default function LandingPage() {
                 .container-main { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
 
                 /* Components */
-                .btn-wine {
-    background-color: var(--wine);
+                .btn-vibrant {
+    background: linear-gradient(135deg, #db2777 0%, #4f46e5 100%);
     color: var(--white);
     padding: 1rem 2rem;
     border-radius: var(--radius);
-    font-weight: 500;
-    letter-spacing: 0.05em;
+    font-weight: 700;
+    letter-spacing: 0.02em;
     transition: var(--transition);
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
+    box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2);
 }
-                .btn-wine:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(107, 31, 42, 0.15); }
+                .btn-vibrant:hover { transform: translateY(-2px); box-shadow: 0 15px 35px rgba(219, 39, 119, 0.3); filter: brightness(1.1); }
 
                 .btn-outline {
     border: 1px solid var(--gold);
@@ -295,7 +297,7 @@ hr.decor {
                 .hero-blob {
     position: absolute; right: -10%; top: -10%;
     width: 60%; height: 80%;
-    background: radial-gradient(circle, var(--wine) 0%, transparent 60%);
+    background: radial-gradient(circle, var(--magenta) 0%, transparent 60%);
     opacity: 0.15;
     z-index: 0;
     filter: blur(80px);
@@ -387,7 +389,7 @@ hr.decor {
                         <a href="#faq" className="text-sm font-bold text-slate-600 hover:text-primary transition-colors tracking-wide">FAQ</a>
                         <div className="w-[1px] h-4 bg-slate-200 mx-2"></div>
                         <Link to="/login" className="text-sm font-bold text-slate-900 hover:text-primary transition-colors tracking-wide">LOGIN</Link>
-                        <button onClick={() => navigate('/register')} className="bg-wine text-white px-8 py-3 rounded-full text-sm font-bold shadow-lg shadow-wine/10 hover:bg-wine-light hover:scale-105 active:scale-95 transition-all">COMEÇAR</button>
+                        <button onClick={() => navigate('/register')} className="bg-gradient-to-r from-[#db2777] to-[#4f46e5] text-white px-8 py-3 rounded-full text-sm font-bold shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">COMEÇAR</button>
                     </div>
 
                     {/* Mobile Toggle */}
@@ -407,7 +409,7 @@ hr.decor {
                     <a href="#faq" onClick={toggleMobileMenu} className="hover:text-primary transition-colors">FAQ</a>
                     <div className="w-12 h-px bg-slate-200"></div>
                     <button onClick={() => { toggleMobileMenu(); navigate('/login'); }} className="hover:text-primary transition-colors">Login</button>
-                    <button onClick={() => navigate('/register')} className="bg-wine text-white w-full justify-center mt-4 py-4 rounded-xl font-bold text-lg shadow-xl shadow-wine/20">Começar Agora</button>
+                    <button onClick={() => navigate('/register')} className="bg-gradient-to-r from-[#db2777] to-[#4f46e5] text-white w-full justify-center mt-4 py-4 rounded-xl font-bold text-lg shadow-xl shadow-primary/20">Começar Agora</button>
                 </div>
             </nav>
 
@@ -437,7 +439,7 @@ hr.decor {
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-12">
                                 <button
                                     onClick={() => navigate('/register')}
-                                    className="bg-wine text-white px-8 py-4 rounded-xl text-lg font-bold shadow-[0_20px_40px_rgba(107,31,42,0.2)] hover:scale-105 hover:bg-wine-light transition-all duration-300"
+                                    className="bg-gradient-to-r from-[#db2777] to-[#4f46e5] text-white px-8 py-4 rounded-xl text-lg font-bold shadow-[0_20px_40px_rgba(79,70,229,0.2)] hover:scale-105 transition-all duration-300"
                                 >
                                     → {content?.hero?.ctaText}
                                 </button>
@@ -585,7 +587,7 @@ hr.decor {
                                         <h3 className="font-serif text-3xl mb-1 text-slate-900">Ana Silva</h3>
                                         <p className="text-xs tracking-wider text-slate-400 uppercase font-bold">Análise de Coloração</p>
                                     </div>
-                                    <div className="bg-cream px-4 py-2 text-sm font-serif italic text-wine rounded-lg border border-wine/10">Outono Quente</div>
+                                    <div className="bg-cream px-4 py-2 text-sm font-serif italic text-[#db2777] rounded-lg border border-[#db2777]/10">Outono Quente</div>
                                 </div>
 
                                 <h4 className="font-serif text-lg mb-4">Paleta Pessoal</h4>
@@ -623,7 +625,7 @@ hr.decor {
 
                     <div className="grid md:grid-cols-3 gap-6 lg:gap-8 items-center mb-16 relative" data-animate>
                         {packages.map((pack) => (
-                            <div key={pack.id} className={`pricing-card text-center flex flex-col transition-all duration-700 relative ${pack.is_popular ? 'bg-gradient-to-br from-primary via-accent to-wine rounded-[2.5rem] py-14 px-10 scale-110 z-30 shadow-[0_40px_100px_rgba(124,58,237,0.4)] border border-white/20' : 'bg-white border border-slate-200 shadow-xl z-10 hover:z-20 hover:scale-[1.02] p-8 rounded-3xl'} `}>
+                            <div key={pack.id} className={`pricing-card text-center flex flex-col transition-all duration-700 relative ${pack.is_popular ? 'bg-gradient-to-br from-primary via-accent to-magenta rounded-[2.5rem] py-14 px-10 scale-110 z-30 shadow-[0_40px_100px_rgba(124,58,237,0.4)] border border-white/20' : 'bg-white border border-slate-200 shadow-xl z-10 hover:z-20 hover:scale-[1.02] p-8 rounded-3xl'} `}>
                                 {pack.is_popular && <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gold text-white text-[11px] font-bold px-6 py-2 rounded-full uppercase tracking-widest shadow-[0_10px_20px_rgba(245,158,11,0.3)] z-40">✦ MAIS POPULAR</div>}
                                 <h3 className={`text-sm font-bold uppercase tracking-[0.2em] ${pack.is_popular ? 'text-white/80' : 'text-slate-400'} mb-8`}>Pack {pack.name}</h3>
                                 <div className={`text-base font-black tracking-widest ${pack.is_popular ? 'text-gold-light' : 'text-primary'} mb-2`}>
@@ -692,7 +694,7 @@ hr.decor {
                 <div className="container-main relative z-10" data-animate>
                     <h2 className="text-4xl md:text-7xl font-serif font-bold mb-8 max-w-4xl mx-auto leading-tight text-slate-900">{content?.cta?.headline}</h2>
                     <p className="text-lg md:text-xl text-slate-600 font-medium mb-12 max-w-2xl mx-auto">{content?.cta?.subheadline}</p>
-                    <button onClick={() => navigate('/register')} className="bg-wine text-white px-12 py-5 rounded-xl text-xl font-bold shadow-2xl shadow-wine/20 mb-12 hover:scale-105 transition-all">→ {content?.cta?.btnText}</button>
+                    <button onClick={() => navigate('/register')} className="bg-gradient-to-r from-[#db2777] to-[#4f46e5] text-white px-12 py-5 rounded-xl text-xl font-bold shadow-2xl shadow-primary/20 mb-12 hover:scale-105 transition-all">→ {content?.cta?.btnText}</button>
                     <p className="text-sm text-primary font-bold uppercase tracking-[0.2em]">Dúvidas? <a href={`mailto:${content?.footer?.contactEmail} `} className="text-slate-900 hover:text-primary transition-colors underline decoration-primary/30">{content?.footer?.contactEmail}</a></p>
                 </div>
             </section>
