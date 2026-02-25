@@ -14,8 +14,8 @@
   --color-accent-foreground: #ffffff;
   --color-dark: #0f172a;
   --color-surface: #ffffff;
-  --color-background: #FB8E7E;
-  /* fundo camarão vibrante */
+  --color-background: #f8fafc;
+  /* fundo luz vibrante padrão */
   --color-foreground: #0f172a;
   /* texto principal escuro Alto Contraste */
   --color-muted: #e2e8f0;
@@ -80,7 +80,7 @@ h6 {
 
 /* shadcn/ui CSS Variable Compatibility */
 :root {
-  --background: #FB8E7E;
+  --background: #f8fafc;
   --foreground: #0f172a;
   --card: #ffffff;
   --card-foreground: #0f172a;
