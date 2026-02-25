@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../stores/authStore";
+import { useConfigStore } from "../stores/configStore";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Globe } from "lucide-react";
 import authVisual from "../assets/auth_visual.png";
 
 const loginSchema = z.object({
@@ -16,7 +17,12 @@ const loginSchema = z.object({
 export default function Login() {
     const navigate = useNavigate();
     const { login } = useAuthStore();
+    const { appLogo, appName, loadConfig } = useConfigStore();
     const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        loadConfig();
+    }, [loadConfig]);
 
     const {
         register,
@@ -65,14 +71,20 @@ export default function Login() {
                 <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-accent/20 rounded-full blur-[80px] mix-blend-screen animate-pulse delay-700" />
 
                 <div className="z-10 text-center px-12 relative max-w-2xl">
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-white/10 border border-white/20 backdrop-blur-xl mb-10 shadow-2xl animate-in zoom-in-50 duration-700">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="w-12 h-12 text-white drop-shadow-2xl">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
-                        </svg>
+                    <div className="inline-flex items-center justify-center w-28 h-28 rounded-3xl bg-white/10 border border-white/20 backdrop-blur-xl mb-10 shadow-2xl animate-in zoom-in-50 duration-700 overflow-hidden p-4">
+                        {appLogo ? (
+                            <img src={appLogo} alt={appName || "Logo"} className="max-w-full max-h-full object-contain animate-in fade-in duration-500" />
+                        ) : (
+                            <Globe className="w-14 h-14 text-white drop-shadow-2xl" strokeWidth={1} />
+                        )}
                     </div>
 
                     <h1 className="text-5xl lg:text-6xl font-black font-heading mb-8 text-white leading-tight tracking-[calc(var(--tracking-tight)*-2)]">
-                        Transforme o seu <br /> <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Olhar pela Cor</span>
+                        {appName?.includes("Chroma") ? (
+                            <>Transforme o seu <br /> <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Olhar pela Cor</span></>
+                        ) : (
+                            appName || "ChromaTest AI"
+                        )}
                     </h1>
                     <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto mb-8 rounded-full" />
                     <p className="text-xl text-slate-300 font-medium leading-relaxed">

@@ -33,11 +33,12 @@ import AdminOrders from './pages/AdminOrders'; // new
 import AdminTickets from './pages/AdminTickets';
 import AdminNotifications from './pages/AdminNotifications';
 import AdminSettings from './pages/AdminSettings';
+import AdminBilling from './pages/AdminBilling';
 
 // Store
 import { useAuthStore } from './stores/authStore';
 import { useConfigStore } from './stores/configStore';
-import { useLandingStore } from './stores/landingStore';
+
 import { useBillingStore } from './stores/billingStore';
 import ClientStore from './pages/ClientStore'; // new
 import ClientSupport from './pages/ClientSupport';
@@ -96,6 +97,7 @@ const router = createBrowserRouter([
           { path: 'orders', element: <AdminOrders /> },
           { path: 'tickets', element: <AdminTickets /> },
           { path: 'notifications', element: <AdminNotifications /> },
+          { path: 'billing', element: <AdminBilling /> },
           { path: 'settings', element: <AdminSettings /> },
           { path: 'account', element: <AccountSettings /> },
         ]
@@ -112,7 +114,7 @@ const router = createBrowserRouter([
 export default function App() {
   const { initialize, currentUser } = useAuthStore();
   const { loadConfig } = useConfigStore();
-  const { loadContent } = useLandingStore();
+
   const { loadPackages, loadOrders } = useBillingStore();
 
   useEffect(() => {

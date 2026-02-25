@@ -1,20 +1,49 @@
 import { useState, useEffect } from "react";
+
 import { useLandingStore } from "../stores/landingStore";
+import { useConfigStore } from "../stores/configStore";
 import { toast } from "sonner";
-import { Save, RefreshCw, ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
+import { Save, RefreshCw, ChevronDown, ChevronUp, Plus, Trash2, Upload, Trash, Image as ImageIcon } from "lucide-react";
+
+const SectionHeader = ({ id, number, title, expandedSection, setExpandedSection }) => (
+    <div
+        className="flex justify-between items-center cursor-pointer p-4 hover:bg-white/5 transition-colors rounded-t-xl"
+        onClick={() => setExpandedSection(expandedSection === id ? null : id)}
+    >
+        <h3 className="text-lg font-bold flex items-center gap-3">
+            <span className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-sm font-bold">{number}</span>
+            {title}
+        </h3>
+        {expandedSection === id ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
+    </div>
+);
 
 export default function AdminLandingEditor() {
-    const { content, loadContent, loading, updateContent, resetContent } = useLandingStore();
+    const { content, loadContent, loading: landingLoading, updateContent, resetContent } = useLandingStore();
+    const { appName, appLogo, loadConfig, loading: configLoading, setAppName, setAppLogo, uploadLogo } = useConfigStore();
     const [formData, setFormData] = useState(null);
-    const [expandedSection, setExpandedSection] = useState('hero');
+    const [expandedSection, setExpandedSection] = useState('general');
+    const [localAppName, setLocalAppName] = useState("");
+    const [isUploading, setIsUploading] = useState(false);
 
     useEffect(() => {
         if (!content) {
             loadContent();
-        } else {
+        } else if (!formData) {
             setFormData(content);
         }
-    }, [content, loadContent]);
+
+        loadConfig();
+    }, [content, loadContent, loadConfig, formData]);
+
+    useEffect(() => {
+        if (appName) {
+            setLocalAppName(appName);
+        }
+    }, [appName]);
+
+    const loading = landingLoading || configLoading;
+
 
     if (loading || !formData) {
         return (
@@ -56,9 +85,39 @@ export default function AdminLandingEditor() {
         handleChange('faq', 'items', newItems);
     };
 
+    const handleLogoUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setIsUploading(true);
+        try {
+            const url = await uploadLogo(file);
+            await setAppLogo(url);
+            toast.success("Logotipo atualizado com sucesso!");
+        } catch (error) {
+            console.error("Error uploading logo:", error);
+            toast.error("Erro ao carregar o logotipo.");
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    const handleRemoveLogo = async () => {
+        if (window.confirm("Tem a certeza que deseja remover o logotipo?")) {
+            await setAppLogo(null);
+            toast.info("Logotipo removido.");
+        }
+    };
+
+    const handleSaveGeneral = async () => {
+        await setAppName(localAppName);
+        toast.success("Configurações gerais atualizadas!");
+    };
+
     const handleSave = () => {
         updateContent(formData);
-        toast.success("Landing Page atualizada com sucesso!");
+        handleSaveGeneral();
+        toast.success("Landing Page e Configurações atualizadas!");
     };
 
     const handleReset = () => {
@@ -68,18 +127,6 @@ export default function AdminLandingEditor() {
         }
     }
 
-    const SectionHeader = ({ id, number, title }) => (
-        <div
-            className="flex justify-between items-center cursor-pointer p-4 hover:bg-white/5 transition-colors rounded-t-xl"
-            onClick={() => setExpandedSection(expandedSection === id ? null : id)}
-        >
-            <h3 className="text-lg font-bold flex items-center gap-3">
-                <span className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-sm font-bold">{number}</span>
-                {title}
-            </h3>
-            {expandedSection === id ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
-        </div>
-    );
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500 max-w-4xl mx-auto pb-12">
@@ -100,9 +147,63 @@ export default function AdminLandingEditor() {
 
             <div className="space-y-4">
 
+                {/* 0. CONFIGURAÇÕES GERAIS */}
+                <div className="glass-card rounded-xl border border-primary/20 overflow-hidden transition-all duration-300 shadow-sm mb-6">
+                    <SectionHeader id="general" number="0" title="Configurações Gerais (Logo & Nome)" expandedSection={expandedSection} setExpandedSection={setExpandedSection} />
+                    {expandedSection === 'general' && (
+                        <div className="p-6 pt-2 space-y-6 border-t border-border bg-white/5">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-bold text-slate-600 dark:text-slate-400 mb-1">Nome da Aplicação</label>
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                value={localAppName}
+                                                onChange={(e) => setLocalAppName(e.target.value)}
+                                                className="flex-1 px-3 py-2 bg-background border border-input rounded-lg focus:ring-primary outline-none font-medium"
+                                                placeholder="Ex: ChromaTest AI"
+                                            />
+                                        </div>
+                                    </div>
+                                    <p className="text-[11px] text-muted-foreground italic">Este nome aparece no título da página e em vários locais da plataforma.</p>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <label className="block text-sm font-bold text-slate-600 dark:text-slate-400 mb-1">Logotipo da Plataforma</label>
+                                    <div className="flex items-center gap-6 p-4 bg-background/50 rounded-xl border border-dashed border-border">
+                                        <div className="w-20 h-20 rounded-lg bg-surface flex items-center justify-center overflow-hidden border border-border shrink-0">
+                                            {appLogo ? (
+                                                <img src={appLogo} alt="Logo" className="max-w-full max-h-full object-contain p-1" />
+                                            ) : (
+                                                <ImageIcon className="w-8 h-8 text-muted opacity-20" />
+                                            )}
+                                        </div>
+                                        <div className="flex-1 space-y-2">
+                                            <div className="flex gap-2">
+                                                <label className={`flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg text-sm font-bold transition-all ${isUploading ? 'bg-muted text-muted-foreground cursor-not-allowed' : 'bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20'}`}>
+                                                    <Upload className="w-4 h-4" />
+                                                    {isUploading ? "A carregar..." : "Carregar Logo"}
+                                                    <input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} disabled={isUploading} />
+                                                </label>
+                                                {appLogo && (
+                                                    <button onClick={handleRemoveLogo} className="p-2 text-muted hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors border border-border">
+                                                        <Trash className="w-4 h-4" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                            <p className="text-[10px] text-muted-foreground">Recomendado: PNG ou SVG com fundo transparente. Máx 1MB.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
                 {/* 1. HERO */}
                 <div className="glass-card rounded-xl border border-border overflow-hidden transition-all duration-300">
-                    <SectionHeader id="hero" number="1" title="Banner (Hero)" />
+                    <SectionHeader id="hero" number="1" title="Banner (Hero)" expandedSection={expandedSection} setExpandedSection={setExpandedSection} />
                     {expandedSection === 'hero' && (
                         <div className="p-6 pt-2 space-y-4 border-t border-border bg-white/5">
                             <div>
@@ -142,7 +243,7 @@ export default function AdminLandingEditor() {
 
                 {/* 2. COMO FUNCIONA */}
                 <div className="glass-card rounded-xl border border-border overflow-hidden transition-all duration-300">
-                    <SectionHeader id="howItWorks" number="2" title="Como Funciona" />
+                    <SectionHeader id="howItWorks" number="2" title="Como Funciona" expandedSection={expandedSection} setExpandedSection={setExpandedSection} />
                     {expandedSection === 'howItWorks' && (
                         <div className="p-6 pt-2 space-y-4 border-t border-border bg-white/5">
                             <div className="grid grid-cols-2 gap-4">
@@ -173,7 +274,7 @@ export default function AdminLandingEditor() {
 
                 {/* 3. SERVIÇOS & RELATÓRIO */}
                 <div className="glass-card rounded-xl border border-border overflow-hidden transition-all duration-300">
-                    <SectionHeader id="services" number="3" title="Serviços & Relatório" />
+                    <SectionHeader id="services" number="3" title="Serviços & Relatório" expandedSection={expandedSection} setExpandedSection={setExpandedSection} />
                     {expandedSection === 'services' && (
                         <div className="p-6 pt-2 space-y-4 border-t border-border bg-white/5">
                             <div>
@@ -198,7 +299,7 @@ export default function AdminLandingEditor() {
 
                 {/* 4. PREÇOS */}
                 <div className="glass-card rounded-xl border border-border overflow-hidden transition-all duration-300">
-                    <SectionHeader id="pricing" number="4" title="Preços" />
+                    <SectionHeader id="pricing" number="4" title="Preços" expandedSection={expandedSection} setExpandedSection={setExpandedSection} />
                     {expandedSection === 'pricing' && (
                         <div className="p-6 pt-2 space-y-4 border-t border-border bg-white/5">
                             <p className="text-xs text-primary mb-4">Nota: Os pacotes em si são geridos no menu "Preços & Pacotes". Aqui ajusta apenas os textos da secção.</p>
@@ -220,7 +321,7 @@ export default function AdminLandingEditor() {
 
                 {/* 5. FAQ */}
                 <div className="glass-card rounded-xl border border-border overflow-hidden transition-all duration-300">
-                    <SectionHeader id="faq" number="5" title="Perguntas Frequentes (FAQ)" />
+                    <SectionHeader id="faq" number="5" title="Perguntas Frequentes (FAQ)" expandedSection={expandedSection} setExpandedSection={setExpandedSection} />
                     {expandedSection === 'faq' && (
                         <div className="p-6 pt-2 space-y-4 border-t border-border bg-white/5">
                             <div>
@@ -251,7 +352,7 @@ export default function AdminLandingEditor() {
 
                 {/* 6. FINAL CTA & FOOTER */}
                 <div className="glass-card rounded-xl border border-border overflow-hidden transition-all duration-300">
-                    <SectionHeader id="ctaFooter" number="6" title="Call to Action & Rodapé" />
+                    <SectionHeader id="ctaFooter" number="6" title="Call to Action & Rodapé" expandedSection={expandedSection} setExpandedSection={setExpandedSection} />
                     {expandedSection === 'ctaFooter' && (
                         <div className="p-6 pt-2 space-y-6 border-t border-border bg-white/5">
                             <div className="space-y-4">

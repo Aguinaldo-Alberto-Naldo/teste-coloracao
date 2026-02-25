@@ -76,7 +76,7 @@ export const useLandingStore = create((set) => ({
             } else {
                 set({ content: data.content });
             }
-        } catch (err) {
+        } catch {
             set({ content: DEFAULT_LANDING_CONTENT });
         } finally {
             set({ loading: false });

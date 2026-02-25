@@ -3,7 +3,7 @@ import { supabase } from "../lib/supabase";
 import { toast } from "sonner";
 
 export const useTestableClientsStore = create(
-    (set, get) => ({
+    (set) => ({
         clients: [],
         loading: false,
 

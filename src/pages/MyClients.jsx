@@ -69,7 +69,7 @@ export default function MyClients() {
                 });
             }
             handleCloseModal();
-        } catch (error) {
+        } catch {
             // Error is handled in store
         } finally {
             setIsSubmitting(false);

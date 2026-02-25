@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../stores/authStore";
 import { useSubjectsStore } from "../stores/subjectsStore";
@@ -6,7 +6,7 @@ import StatusBadge from "../components/ui/StatusBadge";
 import { Plus, ArrowRight, UserCircle2 } from "lucide-react";
 
 export default function Dashboard() {
-    const { currentUser, refreshCurrentUser } = useAuthStore();
+    const { currentUser } = useAuthStore();
     const { loadSubjects, getByClient } = useSubjectsStore();
     const navigate = useNavigate();
 
@@ -130,7 +130,7 @@ export default function Dashboard() {
                             >
                                 <div className="flex justify-between items-start mb-4">
                                     <div className={`w-12 h-12 rounded-full flex items-center justify-center overflow-hidden border-2 transition-transform duration-500 group-hover:scale-110 ${subject.status === "error" ? "bg-destructive/10 border-destructive/20" :
-                                            subject.status === "concluído" ? "bg-success/10 border-success/20" : "bg-primary/10 border-primary/20"
+                                        subject.status === "concluído" ? "bg-success/10 border-success/20" : "bg-primary/10 border-primary/20"
                                         }`}>
                                         {subject.photoUrls?.[0] ? (
                                             <img src={subject.photoUrls[0]} alt="Avatar" className="w-full h-full object-cover" />
@@ -145,7 +145,7 @@ export default function Dashboard() {
                                 <p className="text-xs font-bold text-slate-400 mb-4 truncate italic">{subject.email}</p>
 
                                 <div className={`h-1 w-full absolute bottom-0 left-0 transition-all ${subject.status === "error" ? "bg-destructive/50" :
-                                        subject.status === "concluído" ? "bg-success/50" : "bg-primary/50"
+                                    subject.status === "concluído" ? "bg-success/50" : "bg-primary/50"
                                     } opacity-0 group-hover:opacity-100`} />
 
                                 <div className="text-sm font-bold text-primary group-hover:text-primary/80 transition-colors flex items-center gap-1">

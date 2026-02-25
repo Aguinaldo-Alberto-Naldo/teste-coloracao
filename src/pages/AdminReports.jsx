@@ -1,27 +1,18 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useReportsStore } from "../stores/reportsStore";
-import { useSubjectsStore } from "../stores/subjectsStore";
+
 import { Search, Eye, Calendar, Loader2 } from "lucide-react";
 
 export default function AdminReports() {
     const navigate = useNavigate();
     const { reports, loadReports, loading: reportsLoading } = useReportsStore();
-    const { subjects, loadSubjects, loading: subjectsLoading } = useSubjectsStore();
     const [search, setSearch] = useState("");
 
     useEffect(() => {
         loadReports();
-        loadSubjects();
-    }, [loadReports, loadSubjects]);
+    }, [loadReports]);
 
-    const getClientName = (subjectId) => {
-        const subject = subjects.find(s => s.id === subjectId);
-        if (!subject) return "Cargando...";
-        // For now, names are stored in the subject or we'd need a users table in Supabase.
-        // Assuming we want the client who created it, but the subject name is usually enough.
-        return subject.full_name || "Anónimo";
-    };
 
     const filteredReports = reports.filter(r =>
         (r.subject_name || "").toLowerCase().includes(search.toLowerCase()) ||
@@ -29,7 +20,7 @@ export default function AdminReports() {
         (r.sub_season || "").toLowerCase().includes(search.toLowerCase())
     );
 
-    const isLoading = reportsLoading || subjectsLoading;
+    const isLoading = reportsLoading;
 
     return (
         <div className="space-y-6 max-w-7xl mx-auto animate-in fade-in duration-500 pb-12">

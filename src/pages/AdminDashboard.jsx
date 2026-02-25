@@ -25,9 +25,10 @@ export default function AdminDashboard() {
             setLoading(false);
         };
         loadAll();
-    }, [loadSubjects, loadReports, fetchAllProfiles]);
+    }, [loadSubjects, loadReports, loadTickets, fetchAllProfiles]);
 
     const totalClients = clients.length;
+
     const totalTests = subjects.length;
 
     const totalActiveCredits = clients.reduce((acc, client) => {
@@ -71,7 +72,16 @@ export default function AdminDashboard() {
             .slice(0, 5);
     }, [clients]);
 
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center py-20">
+                <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+            </div>
+        );
+    }
+
     return (
+
         <div className="space-y-8 animate-in fade-in duration-500 max-w-7xl mx-auto">
             <div>
                 <h1 className="text-3xl font-heading font-bold text-foreground mb-2">Painel de Controlo</h1>
@@ -239,6 +249,8 @@ export default function AdminDashboard() {
                             {topClients.map((client) => {
                                 const remaining = client.credits_total - client.credits_used;
                                 return (
+
+
                                     <tr key={client.id} className="hover:bg-muted/50 transition-colors">
                                         <td className="px-6 py-4">
                                             <div className="font-semibold text-foreground">{client.full_name}</div>

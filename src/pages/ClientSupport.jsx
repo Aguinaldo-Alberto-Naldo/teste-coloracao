@@ -5,7 +5,7 @@ import { Plus, MessageSquare, Send, AlertCircle } from "lucide-react";
 
 export default function ClientSupport() {
     const { currentUser } = useAuthStore();
-    const { tickets, loadTickets, createTicket, addReply, loading } = useTicketsStore();
+    const { tickets, loadTickets, createTicket, addReply } = useTicketsStore();
 
     const [isCreating, setIsCreating] = useState(false);
     const [newSubject, setNewSubject] = useState("");
@@ -30,7 +30,7 @@ export default function ClientSupport() {
         if (selectedTicket) {
             scrollToBottom();
         }
-    }, [selectedTicket?.ticket_replies?.length, selectedTicketId]);
+    }, [selectedTicket?.ticket_replies?.length, selectedTicketId, selectedTicket]);
 
     const myTickets = tickets.filter(t => t.user_id === currentUser.id || t.user_email === currentUser.email);
 
@@ -90,7 +90,7 @@ export default function ClientSupport() {
                 <div className="p-4 border-b border-border bg-muted/20 flex justify-between items-center">
                     <h2 className="text-xl font-heading font-bold text-foreground">Meus Tickets</h2>
                     <button
-                        onClick={() => { setSelectedTicket(null); setIsCreating(true); }}
+                        onClick={() => { setSelectedTicketId(null); setIsCreating(true); }}
                         className="p-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
                         title="Novo Ticket"
                     >
@@ -223,9 +223,17 @@ export default function ClientSupport() {
                         <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-background">
                             {/* Original Message */}
                             <div className="flex gap-4 flex-row-reverse">
-                                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary shrink-0">
-                                    {(currentUser.fullName || currentUser.email || 'U')[0].toUpperCase()}
-                                </div>
+                                {selectedTicket.user_profile?.avatar_url ? (
+                                    <img
+                                        src={selectedTicket.user_profile.avatar_url}
+                                        alt={selectedTicket.user_profile.full_name || 'U'}
+                                        className="w-10 h-10 rounded-full object-cover shrink-0 border border-primary/20 shadow-sm"
+                                    />
+                                ) : (
+                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary shrink-0 border border-primary/20 shadow-sm">
+                                        {(selectedTicket.user_profile?.full_name || currentUser.fullName || currentUser.email || 'U')[0].toUpperCase()}
+                                    </div>
+                                )}
                                 <div className="bg-primary/5 border border-primary/20 rounded-2xl rounded-tr-none p-4 max-w-[80%] shadow-sm ml-auto">
                                     <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">{selectedTicket.message}</p>
                                 </div>
@@ -234,9 +242,17 @@ export default function ClientSupport() {
                             {/* Replies */}
                             {(selectedTicket.ticket_replies || []).map((reply) => (
                                 <div key={reply.id} className={`flex gap-4 ${!reply.is_from_admin ? 'flex-row-reverse' : ''}`}>
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0 ${reply.is_from_admin ? 'bg-accent/20 text-accent-foreground' : 'bg-primary/10 text-primary'}`}>
-                                        {reply.is_from_admin ? 'A' : (currentUser.fullName || currentUser.email || 'U')[0].toUpperCase()}
-                                    </div>
+                                    {reply.sender_profile?.avatar_url ? (
+                                        <img
+                                            src={reply.sender_profile.avatar_url}
+                                            alt={reply.sender_profile.full_name || (reply.is_from_admin ? 'Admin' : 'U')}
+                                            className="w-10 h-10 rounded-full object-cover shrink-0 border border-border shadow-sm"
+                                        />
+                                    ) : (
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0 border shadow-sm ${reply.is_from_admin ? 'bg-accent/20 text-accent-foreground border-accent/20' : 'bg-primary/10 text-primary border-primary/20'}`}>
+                                            {reply.is_from_admin ? 'A' : (reply.sender_profile?.full_name || currentUser.fullName || currentUser.email || 'U')[0].toUpperCase()}
+                                        </div>
+                                    )}
                                     <div className={`border rounded-2xl p-4 max-w-[80%] shadow-sm ${!reply.is_from_admin ? 'bg-primary/5 border-primary/20 rounded-tr-none ml-auto' : 'bg-card border-border rounded-tl-none'}`}>
                                         <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">{reply.text}</p>
                                         <p className={`text-[10px] mt-2 font-bold ${!reply.is_from_admin ? 'text-primary/60 text-right' : 'text-slate-500'}`}>{new Date(reply.created_at).toLocaleString()}</p>

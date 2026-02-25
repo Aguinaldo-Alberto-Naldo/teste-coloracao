@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { CreditCard, Plus, ArrowUpRight, ArrowDownRight, Search, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuthStore } from "../stores/authStore";
@@ -14,7 +14,7 @@ export default function AdminCredits() {
 
     const { addCredits, fetchAllProfiles, fetchTransactions } = useAuthStore();
 
-    const loadData = async () => {
+    const loadData = useCallback(async () => {
         setLoading(true);
         try {
             const [profiles, txs] = await Promise.all([
@@ -28,27 +28,33 @@ export default function AdminCredits() {
             toast.error("Erro ao carregar dados.");
         }
         setLoading(false);
-    };
+    }, [fetchAllProfiles, fetchTransactions]);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         loadData();
-    }, [fetchAllProfiles, fetchTransactions]);
+    }, [loadData]);
+
+
 
     const handleAddCredits = async (e) => {
         e.preventDefault();
         if (!selectedClient || amount <= 0) return;
+        console.log(`[AdminCredits] Manually adding ${amount} credits to user ${selectedClient}`);
 
         const toastId = toast.loading("A atribuir créditos...");
         try {
             await addCredits(selectedClient, parseInt(amount, 10), "Atribuição Manual");
+            console.log("[AdminCredits] addCredits success");
             await loadData(); // Reload all to stay in sync
             setIsModalOpen(false);
             setSelectedClient("");
             setAmount(1);
             toast.success("Créditos atribuídos com sucesso!", { id: toastId });
         } catch (error) {
-            console.error(error);
-            toast.error("Erro ao atribuir créditos.", { id: toastId });
+            console.error("[AdminCredits] Error in manual credit attribution:", error);
+            const msg = error?.message || JSON.stringify(error);
+            toast.error(`Erro ao atribuir créditos: ${msg}`, { id: toastId });
         }
     };
 

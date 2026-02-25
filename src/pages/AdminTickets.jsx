@@ -4,7 +4,7 @@ import { useAuthStore } from "../stores/authStore";
 import { Search, MessageSquare, AlertCircle, CheckCircle2, MoreVertical, Send, Loader2 } from "lucide-react";
 
 export default function AdminTickets() {
-    const { tickets, loadTickets, updateStatus, addReply, deleteTicket, loading } = useTicketsStore();
+    const { tickets, loadTickets, updateStatus, addReply, loading } = useTicketsStore();
     const { currentUser } = useAuthStore();
     const [searchTerm, setSearchTerm] = useState("");
     const [filterStatus, setFilterStatus] = useState("all");
@@ -26,11 +26,12 @@ export default function AdminTickets() {
         if (selectedTicket) {
             scrollToBottom();
         }
-    }, [selectedTicket?.ticket_replies?.length, selectedTicketId]);
+    }, [selectedTicket?.ticket_replies?.length, selectedTicketId, selectedTicket]);
 
     const filteredTickets = tickets.filter(t => {
         const matchesSearch = (t.subject || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (t.user_email || "").toLowerCase().includes(searchTerm.toLowerCase());
+            (t.user_email || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (t.user_profile?.full_name || "").toLowerCase().includes(searchTerm.toLowerCase());
         const matchesStatus = filterStatus === "all" || t.status === filterStatus;
         return matchesSearch && matchesStatus;
     });
@@ -119,8 +120,25 @@ export default function AdminTickets() {
                                         {new Date(ticket.created_at).toLocaleDateString()}
                                     </span>
                                 </div>
-                                <h3 className="font-bold text-sm text-foreground mb-1 line-clamp-1">{ticket.subject}</h3>
-                                <p className="text-xs text-muted-foreground line-clamp-1">{ticket.user_email}</p>
+                                <div className="flex gap-3 items-center">
+                                    {ticket.user_profile?.avatar_url ? (
+                                        <img
+                                            src={ticket.user_profile.avatar_url}
+                                            alt={ticket.user_profile.full_name || 'U'}
+                                            className="w-10 h-10 rounded-full object-cover shrink-0 border border-border mt-1"
+                                        />
+                                    ) : (
+                                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary shrink-0 border border-primary/20 mt-1">
+                                            {(ticket.user_profile?.full_name || ticket.user_email || 'U')[0].toUpperCase()}
+                                        </div>
+                                    )}
+                                    <div className="flex-1 min-w-0">
+                                        <h3 className="font-bold text-sm text-foreground mb-0.5 line-clamp-1">{ticket.subject}</h3>
+                                        <p className="text-[11px] text-muted-foreground line-clamp-1 font-medium italic">
+                                            {ticket.user_profile?.full_name || "Utilizador"} • {ticket.user_email}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         ))
                     )}
@@ -146,12 +164,28 @@ export default function AdminTickets() {
                     <>
                         <div className="p-6 border-b border-border bg-muted/10 flex-shrink-0">
                             <div className="flex justify-between items-start mb-4">
-                                <div>
-                                    <h2 className="text-2xl font-heading font-bold text-foreground mb-1">{selectedTicket.subject}</h2>
-                                    <p className="text-sm text-muted-foreground flex items-center gap-2">
-                                        <span className="font-medium text-foreground">{selectedTicket.user_email}</span> •
-                                        {new Date(selectedTicket.created_at).toLocaleString()}
-                                    </p>
+                                <div className="flex items-center gap-4">
+                                    {selectedTicket.user_profile?.avatar_url ? (
+                                        <img
+                                            src={selectedTicket.user_profile.avatar_url}
+                                            alt={selectedTicket.user_profile.full_name || 'U'}
+                                            className="w-12 h-12 rounded-full object-cover shrink-0 border-2 border-primary/20 shadow-sm"
+                                        />
+                                    ) : (
+                                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary shrink-0 border-2 border-primary/20 shadow-sm text-lg">
+                                            {(selectedTicket.user_profile?.full_name || selectedTicket.user_email || 'U')[0].toUpperCase()}
+                                        </div>
+                                    )}
+                                    <div>
+                                        <h2 className="text-2xl font-heading font-bold text-foreground mb-0.5">{selectedTicket.subject}</h2>
+                                        <p className="text-sm text-muted-foreground flex items-center gap-2 font-medium">
+                                            <span className="text-foreground font-bold">{selectedTicket.user_profile?.full_name || "Utilizador"}</span>
+                                            <span className="opacity-50">•</span>
+                                            <span>{selectedTicket.user_email}</span>
+                                            <span className="opacity-50">•</span>
+                                            <span>{new Date(selectedTicket.created_at).toLocaleString()}</span>
+                                        </p>
+                                    </div>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <select
@@ -176,9 +210,17 @@ export default function AdminTickets() {
                         <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-background">
                             {/* Original Message */}
                             <div className="flex gap-4">
-                                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary shrink-0">
-                                    {selectedTicket.user_email?.[0]?.toUpperCase() || 'U'}
-                                </div>
+                                {selectedTicket.user_profile?.avatar_url ? (
+                                    <img
+                                        src={selectedTicket.user_profile.avatar_url}
+                                        alt={selectedTicket.user_profile.full_name || 'U'}
+                                        className="w-10 h-10 rounded-full object-cover shrink-0 border border-border shadow-sm"
+                                    />
+                                ) : (
+                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary shrink-0 border border-primary/20 shadow-sm">
+                                        {(selectedTicket.user_profile?.full_name || selectedTicket.user_email || 'U')[0].toUpperCase()}
+                                    </div>
+                                )}
                                 <div className="bg-card border border-border rounded-2xl rounded-tl-none p-4 max-w-[80%] shadow-sm">
                                     <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">{selectedTicket.message}</p>
                                 </div>
@@ -187,9 +229,17 @@ export default function AdminTickets() {
                             {/* Replies */}
                             {(selectedTicket.ticket_replies || []).map((reply) => (
                                 <div key={reply.id} className={`flex gap-4 ${reply.is_from_admin ? 'flex-row-reverse' : ''}`}>
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0 ${reply.is_from_admin ? 'bg-accent/20 text-accent-foreground' : 'bg-primary/10 text-primary'}`}>
-                                        {reply.is_from_admin ? 'A' : (selectedTicket.user_email?.[0]?.toUpperCase() || 'U')}
-                                    </div>
+                                    {reply.sender_profile?.avatar_url ? (
+                                        <img
+                                            src={reply.sender_profile.avatar_url}
+                                            alt={reply.sender_profile.full_name || (reply.is_from_admin ? 'Admin' : 'U')}
+                                            className="w-10 h-10 rounded-full object-cover shrink-0 border border-border shadow-sm"
+                                        />
+                                    ) : (
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0 border shadow-sm ${reply.is_from_admin ? 'bg-accent/20 text-accent-foreground border-accent/20' : 'bg-primary/10 text-primary border-primary/20'}`}>
+                                            {reply.is_from_admin ? 'A' : (reply.sender_profile?.full_name || selectedTicket.user_email || 'U')[0].toUpperCase()}
+                                        </div>
+                                    )}
                                     <div className={`border rounded-2xl p-4 max-w-[80%] shadow-sm ${reply.is_from_admin ? 'bg-accent/5 border-accent/20 rounded-tr-none' : 'bg-card border-border rounded-tl-none'}`}>
                                         <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">{reply.text}</p>
                                         <p className={`text-[10px] mt-2 ${reply.is_from_admin ? 'text-accent-foreground/60 text-right' : 'text-muted-foreground'}`}>{new Date(reply.created_at).toLocaleString()}</p>

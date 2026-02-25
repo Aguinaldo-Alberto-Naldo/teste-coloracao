@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Users, UserPlus, FileText, Settings, CreditCard, LogOut, ShoppingBag, LayoutTemplate, Briefcase, Bell } from "lucide-react";
+import { LayoutDashboard, Users, UserPlus, FileText, Settings, CreditCard, LogOut, ShoppingBag, LayoutTemplate, Briefcase, Bell, TrendingUp } from "lucide-react";
 import { useAuthStore } from "../../stores/authStore";
 import { useConfigStore } from "../../stores/configStore";
 
@@ -25,6 +25,7 @@ export default function Sidebar({ role, isMobile = false }) {
         { to: "/admin/credits", icon: CreditCard, label: "Créditos" },
         { to: "/admin/packages", icon: Settings, label: "Pacotes" },
         { to: "/admin/tickets", icon: FileText, label: "Tickets de Suporte" },
+        { to: "/admin/billing", icon: TrendingUp, label: "Faturamento" },
         { to: "/admin/notifications", icon: Bell, label: "Gestão de Alertas" },
         { to: "/admin/settings", icon: Settings, label: "Configurações" },
     ];

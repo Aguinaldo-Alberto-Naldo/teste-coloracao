@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Camera, X, RefreshCw, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -8,12 +8,7 @@ export default function CameraCapture({ onCapture, onClose }) {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
 
-    useEffect(() => {
-        startCamera();
-        return () => stopCamera();
-    }, []);
-
-    const startCamera = async () => {
+    const startCamera = useCallback(async () => {
         try {
             const mediaStream = await navigator.mediaDevices.getUserMedia({
                 video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } }
@@ -27,14 +22,22 @@ export default function CameraCapture({ onCapture, onClose }) {
             toast.error("Não foi possível aceder à câmara. Verifique as permissões.");
             onClose();
         }
-    };
+    }, [onClose]);
 
-    const stopCamera = () => {
+    const stopCamera = useCallback(() => {
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
             setStream(null);
         }
-    };
+    }, [stream]);
+
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        startCamera();
+        return () => stopCamera();
+    }, [startCamera, stopCamera]);
+
+
 
     const takePhoto = () => {
         if (videoRef.current && canvasRef.current) {

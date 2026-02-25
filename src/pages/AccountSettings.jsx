@@ -35,8 +35,7 @@ export default function AccountSettings() {
             const publicUrl = await uploadAvatar(file);
             setAvatarUrl(publicUrl);
             toast.success("Foto carregada com sucesso!");
-        } catch (error) {
-            console.error(error);
+        } catch {
             toast.error("Erro ao carregar foto");
         } finally {
             setUploading(false);
@@ -49,7 +48,7 @@ export default function AccountSettings() {
             setLoading(true);
             await updateProfile({ fullName, avatarUrl });
             toast.success("Perfil atualizado com sucesso!");
-        } catch (error) {
+        } catch {
             toast.error("Erro ao atualizar perfil");
         } finally {
             setLoading(false);
@@ -62,7 +61,7 @@ export default function AccountSettings() {
             setLoading(true);
             await updateEmail(email);
             toast.success("Email atualizado! Verifique a sua caixa de entrada.");
-        } catch (error) {
+        } catch {
             toast.error("Erro ao atualizar email");
         } finally {
             setLoading(false);
@@ -86,7 +85,7 @@ export default function AccountSettings() {
             setPassword("");
             setConfirmPassword("");
             toast.success("Senha atualizada com sucesso!");
-        } catch (error) {
+        } catch {
             toast.error("Erro ao atualizar senha");
         } finally {
             setLoading(false);

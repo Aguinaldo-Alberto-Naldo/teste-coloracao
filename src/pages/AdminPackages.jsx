@@ -14,8 +14,8 @@ export default function AdminPackages() {
             setLoading(true);
             try {
                 await loadPackages();
-            } catch (error) {
-                console.error("Error loading packages:", error);
+            } catch (err) {
+                console.error("Error loading packages:", err);
             }
             setLoading(false);
         };
@@ -45,8 +45,8 @@ export default function AdminPackages() {
             }
             setIsEditing(false);
             setCurrentPkg(null);
-        } catch (error) {
-            console.error(error);
+        } catch (err) {
+            console.error(err);
             toast.error("Erro ao salvar pacote.", { id: toastId });
         }
     };
@@ -56,7 +56,7 @@ export default function AdminPackages() {
             try {
                 await deletePackage(id);
                 toast.success("Pacote eliminado.");
-            } catch (error) {
+            } catch {
                 toast.error("Erro ao eliminar pacote.");
             }
         }

@@ -216,7 +216,7 @@ export default function NewSubject() {
                 const fileExt = originalName.split('.').pop() || 'jpg';
                 const fileName = `${currentUser.id}/${crypto.randomUUID()}.${fileExt}`;
 
-                const { data: uploadData, error: uploadError } = await supabase.storage
+                const { error: uploadError } = await supabase.storage
                     .from('photos')
                     .upload(fileName, file, { cacheControl: '3600', upsert: false });
 

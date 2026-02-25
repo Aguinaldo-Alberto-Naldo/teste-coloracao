@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLandingStore } from '../stores/landingStore';
 import { useBillingStore } from '../stores/billingStore';
@@ -7,15 +7,14 @@ import { useConfigStore } from '../stores/configStore';
 export default function LandingPage() {
     const navigate = useNavigate();
     const cursorRef = useRef(null);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { content, loading: landingLoading, loadContent } = useLandingStore();
     const { packages, loadPackages } = useBillingStore();
-    const { appName, appLogo, loadConfig } = useConfigStore();
+    const { appName, appLogo } = useConfigStore();
 
     useEffect(() => {
         if (!content) loadContent();
         if (packages.length === 0) loadPackages();
-    }, []);
+    }, [content, loadContent, loadPackages, packages.length]);
 
     useEffect(() => {
         // 1. NAVBAR SCROLL
@@ -132,7 +131,7 @@ export default function LandingPage() {
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap');
 
                 .landing-root {
-                    --bg-page: #FCFCFD;
+                    --bg-page: #FB8E7E;
                     --ink: #0f172a;
                     --slate-900: #0f172a;
                     --slate-800: #1e293b;

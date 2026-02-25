@@ -6,13 +6,12 @@ import { Send, Users, User, Bell, Loader2, AlertTriangle, CheckCircle2, Info } f
 import { toast } from "sonner";
 
 export default function AdminNotifications() {
-    const { currentUser, fetchAllProfiles } = useAuthStore();
+    const { fetchAllProfiles } = useAuthStore();
     const { sendNotification } = useNotificationsStore();
 
     const [targetType, setTargetType] = useState("all"); // all, single
     const [userId, setUserId] = useState("");
     const [users, setUsers] = useState([]);
-    const [loadingUsers, setLoadingUsers] = useState(false);
 
     const [title, setTitle] = useState("");
     const [message, setMessage] = useState("");
@@ -22,7 +21,6 @@ export default function AdminNotifications() {
 
     useEffect(() => {
         const loadUsers = async () => {
-            setLoadingUsers(true);
             try {
                 const profiles = await fetchAllProfiles();
                 // Filter out admins and format if needed
@@ -31,8 +29,6 @@ export default function AdminNotifications() {
             } catch (err) {
                 console.error("DEBUG Error fetching users for alerts:", err);
                 toast.error("Erro ao carregar lista de usuários.");
-            } finally {
-                setLoadingUsers(false);
             }
         };
         loadUsers();

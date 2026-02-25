@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useBillingStore } from "../stores/billingStore";
 import { useAuthStore } from "../stores/authStore";
 import { toast } from "sonner";
@@ -12,7 +12,7 @@ export default function AdminOrders() {
     const [clients, setClients] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const loadData = async () => {
+    const loadData = useCallback(async () => {
         setLoading(true);
         try {
             await Promise.all([
@@ -24,11 +24,12 @@ export default function AdminOrders() {
             toast.error("Erro ao carregar pedidos.");
         }
         setLoading(false);
-    };
+    }, [loadOrders, fetchAllProfiles]);
 
     useEffect(() => {
         loadData();
-    }, []);
+    }, [loadData]);
+
 
     const pendingOrders = orders.filter(order => order && order.status === 'pending').filter(order => {
         const client = clients.find(c => c.id === order.user_id);
@@ -39,24 +40,63 @@ export default function AdminOrders() {
     });
 
     const handleApprove = async (order) => {
-        if (!order) return;
-        if (window.confirm(`Tem a certeza que deseja aprovar o pacote de ${order.credits} testes? O saldo do utilizador será incrementado de imediato.`)) {
-            const toastId = toast.loading("A aprovar pedido...");
-            try {
-                // IMPORTANT: updateOrderStatus must complete successfully before addCredits
-                const updated = await updateOrderStatus(order.id, 'approved');
-                if (updated) {
-                    await addCredits(order.user_id, order.credits, order.package_name);
-                    toast.success("Pedido aprovado e créditos atribuídos!", { id: toastId });
-                    setViewingProof(null);
-                } else {
-                    throw new Error("Falha ao atualizar estado do pedido.");
-                }
-            } catch (error) {
-                console.error("DEBUG:", error);
-                const msg = error?.message || error?.error_description || JSON.stringify(error) || "Desconhecido";
-                toast.error(`Erro ao aprovar: ${msg}`, { id: toastId });
+        try {
+            if (!order) {
+                console.error("[AdminOrders] handleApprove called without order object");
+                return;
             }
+            console.log("[AdminOrders] Starting handleApprove. Full order object:", order);
+            console.log("[AdminOrders] order.id:", order.id, "order.credits:", order.credits);
+
+            const confirmMsg = `Tem a certeza que deseja aprovar o pacote de ${order.credits} testes? O saldo do utilizador será incrementado de imediato.`;
+            console.log("[AdminOrders] Prepared confirm message:", confirmMsg);
+
+            console.log("[AdminOrders] Opening dialog...");
+            const confirmed = window.confirm(confirmMsg);
+            console.log("[AdminOrders] Dialog result:", confirmed);
+
+            if (confirmed) {
+                console.log("[AdminOrders] Permission granted. Starting toast...");
+                if (!toast) {
+                    console.error("[AdminOrders] toast is undefined!");
+                    throw new Error("Sistema de notificações não inicializado.");
+                }
+
+                const toastId = toast.loading("A aprovar pedido...");
+                try {
+                    console.log("[AdminOrders] Calling updateOrderStatus...");
+                    const updated = await updateOrderStatus(order.id, 'approved');
+                    console.log("[AdminOrders] updateOrderStatus result:", updated);
+
+                    if (updated) {
+                        try {
+                            console.log("[AdminOrders] Calling addCredits for user:", order.user_id);
+                            await addCredits(order.user_id, order.credits, order.package_name);
+                            console.log("[AdminOrders] addCredits success");
+                            toast.success("Pedido aprovado e créditos atribuídos!", { id: toastId });
+                        } catch (creditErr) {
+                            console.error('[AdminOrders] Error in addCredits:', creditErr);
+                            const msg = creditErr?.message || JSON.stringify(creditErr);
+                            toast.error(`Aprovado, mas falha ao atribuir créditos: ${msg}`, { id: toastId });
+                        }
+                        setViewingProof(null);
+                        console.log("[AdminOrders] Reloading orders...");
+                        await loadOrders();
+                    } else {
+                        console.error("[AdminOrders] updateOrderStatus returned false/null");
+                        throw new Error("Falha ao atualizar estado do pedido.");
+                    }
+                } catch (error) {
+                    console.error("[AdminOrders] Error during update process:", error);
+                    const msg = error?.message || error?.error_description || JSON.stringify(error) || "Desconhecido";
+                    toast.error(`Erro ao aprovar: ${msg}`, { id: toastId });
+                }
+            } else {
+                console.log("[AdminOrders] Approval cancelled by user.");
+            }
+        } catch (fatalErr) {
+            console.error("[AdminOrders] FATAL error in handleApprove:", fatalErr);
+            alert("Erro fatal ao processar aprovação: " + fatalErr.message);
         }
     };
 
@@ -67,6 +107,7 @@ export default function AdminOrders() {
                 await updateOrderStatus(order.id, 'rejected');
                 toast.info("Pedido rejeitado.", { id: toastId });
                 setViewingProof(null);
+                await loadOrders();
             } catch (error) {
                 console.error(error);
                 toast.error("Erro ao rejeitar pedido.", { id: toastId });

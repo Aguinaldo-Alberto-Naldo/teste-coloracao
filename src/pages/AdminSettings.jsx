@@ -1,14 +1,43 @@
 import { useState } from "react";
 import { useConfigStore } from "../stores/configStore";
-import { Settings, Image as ImageIcon, Globe, Save, RotateCcw } from "lucide-react";
+import { Settings, Image as ImageIcon, Globe, Save, RotateCcw, Camera, Upload } from "lucide-react";
 import { toast } from "sonner";
+import { useRef } from "react";
 
 export default function AdminSettings() {
-    const { appName, appLogo, aiPrompt, setAppName, setAppLogo, setAiPrompt, resetConfig } = useConfigStore();
+    const { appName, appLogo, aiPrompt, setAppName, setAppLogo, setAiPrompt, resetConfig, uploadLogo } = useConfigStore();
+    const fileInputRef = useRef(null);
 
     const [localName, setLocalName] = useState(appName);
     const [localLogo, setLocalLogo] = useState(appLogo || "");
     const [localPrompt, setLocalPrompt] = useState(aiPrompt || "");
+    const [uploading, setUploading] = useState(false);
+
+    const handleLogoClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (file.size > 2 * 1024 * 1024) {
+            toast.error("A imagem deve ser menor que 2MB");
+            return;
+        }
+
+        try {
+            setUploading(true);
+            const publicUrl = await uploadLogo(file);
+            setLocalLogo(publicUrl);
+            toast.success("Logotipo carregado com sucesso!");
+        } catch (error) {
+            console.error(error);
+            toast.error("Erro ao carregar logotipo");
+        } finally {
+            setUploading(false);
+        }
+    };
 
     const handleSave = (e) => {
         e.preventDefault();
@@ -64,20 +93,39 @@ export default function AdminSettings() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-bold text-foreground mb-1.5">URL do Logotipo</label>
-                                    <div className="flex gap-2">
-                                        <div className="relative flex-1">
-                                            <ImageIcon className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                                            <input
-                                                type="text"
-                                                value={localLogo}
-                                                onChange={(e) => setLocalLogo(e.target.value)}
-                                                className="w-full pl-9 pr-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground"
-                                                placeholder="https://exemplo.com/logo.png"
-                                            />
-                                        </div>
+                                    <label className="block text-sm font-bold text-foreground mb-1.5">Logotipo da Plataforma</label>
+                                    <div className="flex items-center gap-4">
+                                        <button
+                                            type="button"
+                                            onClick={handleLogoClick}
+                                            disabled={uploading}
+                                            className="flex items-center gap-2 px-4 py-2 bg-secondary text-foreground border border-border rounded-lg hover:bg-muted transition-all font-bold text-sm disabled:opacity-50"
+                                        >
+                                            {uploading ? (
+                                                <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                                            ) : (
+                                                <Upload className="w-4 h-4 text-primary" />
+                                            )}
+                                            {uploading ? "Carregando..." : "Carregar Novo Logo"}
+                                        </button>
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            onChange={handleFileChange}
+                                            className="hidden"
+                                            accept="image/*"
+                                        />
+                                        {localLogo && (
+                                            <button
+                                                type="button"
+                                                onClick={() => setLocalLogo("")}
+                                                className="text-[11px] text-destructive font-bold hover:underline"
+                                            >
+                                                Remover
+                                            </button>
+                                        )}
                                     </div>
-                                    <p className="text-[11px] text-slate-500 font-medium mt-1">Insira a URL de uma imagem (PNG/SVG preferencialmente).</p>
+                                    <p className="text-[11px] text-slate-500 font-medium mt-2">Recomendado: PNG ou SVG transparente.</p>
                                 </div>
                             </div>
 
@@ -112,7 +160,7 @@ export default function AdminSettings() {
                         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                             <h4 className="text-blue-900 font-bold text-sm mb-1">Nota Importante</h4>
                             <p className="text-blue-800 text-xs leading-relaxed">
-                                Este prompt é enviado para o GPT-4 Vision. Certifique-se de manter as instruções sobre o formato JSON, caso contrário a aplicação não conseguirá processar os resultados. Se deixar em branco, o sistema usará o prompt padrão.
+                                Este prompt é enviado para o Google Gemini 2.5 Pro. Certifique-se de manter as instruções sobre o formato JSON, caso contrário a aplicação não conseguirá processar os resultados. Se deixar em branco, o sistema usará o prompt padrão.
                             </p>
                         </div>
 

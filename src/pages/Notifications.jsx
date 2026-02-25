@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useAuthStore } from "../stores/authStore";
 import { useNotificationsStore } from "../stores/notificationsStore";
 import { Bell, Info, AlertTriangle, CheckCircle2, Ticket, Check, Trash2, Loader2, ArrowLeft } from "lucide-react";

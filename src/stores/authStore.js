@@ -122,6 +122,7 @@ export const useAuthStore = create(
             },
 
             addCredits: async (userId, amount, planName = "Pacote de Créditos") => {
+                console.log(`[authStore] addCredits called for user ${userId}, amount ${amount}, plan ${planName}`);
                 // Fetch the TARGET user profile first to get their ACTUAL current credits
                 const { data: profile, error: profileError } = await supabase
                     .from('profiles')
@@ -129,45 +130,79 @@ export const useAuthStore = create(
                     .eq('id', userId)
                     .single();
 
-                if (profileError) throw profileError;
+                if (profileError) {
+                    console.error("[authStore] Error fetching target profile:", profileError);
+                    throw profileError;
+                }
 
                 const now = new Date();
                 let currentAvailable = (profile.credits_total || 0) - (profile.credits_used || 0);
+                console.log(`[authStore] Current credits: total=${profile.credits_total}, used=${profile.credits_used}, available=${currentAvailable}`);
 
                 // Check for expiration
                 if (profile.credits_expiration && new Date(profile.credits_expiration) < now) {
+                    console.log("[authStore] Credits expired, resetting available to 0");
                     currentAvailable = 0;
                 }
 
                 const expirationDate = new Date();
                 expirationDate.setMonth(expirationDate.getMonth() + 1);
 
+                const newTotal = currentAvailable + amount;
+                console.log(`[authStore] Updating profile. New total: ${newTotal}`);
+
+                const profileUpdateFields = {
+                    credits_total: newTotal,
+                    credits_used: 0,
+                    credits_expiration: expirationDate.toISOString(),
+                    current_plan: planName,
+                    updated_at: new Date().toISOString()
+                };
+
                 const { data: updatedData, error } = await supabase
                     .from('profiles')
-                    .update({
-                        credits_total: currentAvailable + amount,
-                        credits_used: 0,
-                        credits_expiration: expirationDate.toISOString(),
-                        current_plan: planName
-                    })
+                    .update(profileUpdateFields)
                     .eq('id', userId)
                     .select();
 
-                if (error) throw error;
-                const updated = updatedData[0];
+                if (error) {
+                    console.error("[authStore] Error updating profile credits:", error);
+                    throw error;
+                }
+
+                let updated;
+                if (!updatedData || updatedData.length === 0) {
+                    console.warn("[authStore] No data returned from profile update. RLS might be blocking the result. Using manual object for sync.");
+                    // Fallback: construct the updated object manually using original and updates
+                    updated = { ...profile, ...profileUpdateFields };
+                } else {
+                    updated = updatedData[0];
+                    console.log("[authStore] Profile updated successfully via database response.");
+                }
+
+                console.log("[authStore] Final updated profile state:", updated);
 
                 // Log transaction
-                await supabase.from('credit_transactions').insert([{
+                console.log("[authStore] Inserting credit transaction...");
+                const { error: transError } = await supabase.from('credit_transactions').insert([{
                     user_id: userId,
                     amount: amount,
                     type: 'purchase',
                     description: `Atribuição de créditos (${planName})`
                 }]);
 
+                if (transError) {
+                    console.error("[authStore] Error inserting credit transaction:", transError);
+                    // Don't throw here, the credits were already added
+                } else {
+                    console.log("[authStore] Credit transaction logged successfully.");
+                }
+
                 const mapped = get().mapProfile(updated);
 
                 // ONLY update local store if the updated profile is the currently logged in user
                 if (get().currentUser?.id === userId) {
+                    console.log("[authStore] Updating local currentUser state.");
                     set({ currentUser: mapped });
                 }
 

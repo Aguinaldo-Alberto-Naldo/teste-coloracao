@@ -1,8 +1,21 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { useEffect } from "react";
 import { useAuthStore } from "../../stores/authStore";
 
+/**
+ * AdminGuard component protects admin routes.
+ * Handles loading, redirects unauthenticated users to login,
+ * and redirects non‑admin users to the standard dashboard.
+ */
 export default function AdminGuard() {
-    const { currentUser, loading } = useAuthStore();
+    const { currentUser, loading, initialize } = useAuthStore();
+
+    // Initialize auth store on mount if needed.
+    useEffect(() => {
+        if (initialize) {
+            initialize();
+        }
+    }, [initialize]);
 
     if (loading) {
         return (
@@ -16,8 +29,8 @@ export default function AdminGuard() {
         return <Navigate to="/login" replace />;
     }
 
+    // Redirect non‑admin users.
     if (currentUser.role !== "admin") {
-        // If client, send to their dashboard
         return <Navigate to="/dashboard" replace />;
     }
 

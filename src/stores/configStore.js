@@ -43,21 +43,46 @@ export const useConfigStore = create((set, get) => ({
         }
     },
 
-    setAppLogo: async (logo) => {
+    setAppLogo: async (logoUrl) => {
+        // logoUrl is expected to be a string URL from uploadLogo or manual input
         const { error } = await supabase
             .from('site_config')
             .upsert({
                 key: 'app_config',
                 content: {
                     appName: get().appName,
-                    appLogo: logo,
+                    appLogo: logoUrl,
                     aiPrompt: get().aiPrompt
                 },
                 updated_at: new Date().toISOString()
             });
 
         if (!error) {
-            set({ appLogo: logo });
+            set({ appLogo: logoUrl });
+        }
+        return !error;
+    },
+
+    uploadLogo: async (file) => {
+        set({ loading: true });
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `logo-${Math.random()}.${fileExt}`;
+            const filePath = `${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('avatars') // Using avatars bucket as it's likely already configured with public read
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('avatars')
+                .getPublicUrl(filePath);
+
+            return publicUrl;
+        } finally {
+            set({ loading: false });
         }
     },
 
