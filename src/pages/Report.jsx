@@ -165,11 +165,54 @@ export default function Report() {
                         </p>
                     </section>
 
+                    {/* Objective Colors Sensor Result (Enhanced for n8n/Perfect Corp) */}
+                    {(report.skin_tone_data || report.skin_color_hex) && (
+                        <section className="bg-white/5 rounded-3xl p-8 border border-white/10 animate-in fade-in zoom-in duration-700">
+                            <div className="flex items-center gap-3 mb-8">
+                                <span className="flex h-3 w-3 rounded-full bg-primary animate-pulse"></span>
+                                <h4 className="text-xl font-heading font-bold text-foreground">
+                                    Perfil Biológico de Cores
+                                </h4>
+                            </div>
+
+                            <div className="flex flex-wrap justify-center gap-8 md:gap-12">
+                                {(() => {
+                                    const data = report.skin_tone_data || { skin_color: report.skin_color_hex };
+                                    const labels = {
+                                        skin_color: "Pele",
+                                        hair_color: "Cabelo",
+                                        eye_color: "Olhos",
+                                        lip_color: "Lábios",
+                                        eyebrow_color: "Sobrancelhas"
+                                    };
+
+                                    return Object.entries(data).map(([key, hex]) => {
+                                        if (!hex || typeof hex !== 'string' || !hex.startsWith('#')) return null;
+                                        return (
+                                            <ColorSwatch
+                                                key={key}
+                                                color={{
+                                                    name: labels[key] || key,
+                                                    hex: hex
+                                                }}
+                                            />
+                                        );
+                                    });
+                                })()}
+                            </div>
+
+                            <p className="text-sm text-muted-foreground mt-8 text-center bg-white/5 p-4 rounded-xl border border-white/5">
+                                Valores extraídos via <strong>Bio-Sensing AI</strong>. Estes tons representam a sua base biológica pura,
+                                utilizada para garantir a máxima precisão na recomendação da sua cartela sazonal.
+                            </p>
+                        </section>
+                    )}
+
                     {/* Color Palette */}
                     <section>
                         <div className="text-center mb-10">
                             <h3 className="text-3xl font-heading font-bold text-foreground">A Tua Paleta Estrela</h3>
-                            <p className="text-muted-foreground mt-2 font-bold">Cores que harmonizam perfeitamente com a sua tez.</p>
+                            <p className="text-muted-foreground mt-2 font-bold">Cores selecionadas para iluminar o seu rosto e suavizar imperfeições.</p>
                         </div>
                         <div className="flex flex-wrap justify-center gap-8 md:gap-12">
                             {(report.palette || []).map((color, idx) => (
@@ -181,8 +224,8 @@ export default function Report() {
                     {/* Avoid Colors */}
                     <section className="bg-secondary/30 rounded-2xl p-8 md:p-12 border border-border">
                         <div className="text-center mb-10">
-                            <h3 className="text-2xl font-heading font-bold text-destructive">Cores a Evitar</h3>
-                            <p className="text-muted-foreground mt-2 text-sm font-bold">Tons que podem apagar a sua luminosidade natural.</p>
+                            <h3 className="text-2xl font-heading font-bold text-destructive">Cores Críticas (A Evitar)</h3>
+                            <p className="text-muted-foreground mt-2 text-sm font-bold">Tons que podem acentuar sombras e apagar a sua luminosidade natural.</p>
                         </div>
                         <div className="flex flex-wrap justify-center gap-6 md:gap-10">
                             {(report.colors_to_avoid || []).map((color, idx) => (
@@ -197,11 +240,12 @@ export default function Report() {
                             <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-4 text-primary">
                                 <Shirt className="w-7 h-7" />
                             </div>
-                            <h3 className="font-heading font-bold text-xl mb-4 text-foreground">Vestuário</h3>
+                            <h3 className="font-heading font-bold text-xl mb-4 text-foreground">Estilo e Vestuário</h3>
                             <div className="text-sm text-left space-y-3 w-full">
-                                <p><strong className="text-foreground">Sugestões:</strong> <span className="text-muted-foreground font-medium">{report.clothing?.suggestions}</span></p>
-                                <p><strong className="text-foreground">Tecidos:</strong> <span className="text-muted-foreground font-medium">{report.clothing?.fabrics}</span></p>
-                                <p><strong className="text-foreground">Padrões:</strong> <span className="text-muted-foreground font-medium">{report.clothing?.patterns}</span></p>
+                                {report.clothing?.suggestions && <p><strong className="text-foreground">Destaque:</strong> <span className="text-muted-foreground font-medium">{report.clothing.suggestions}</span></p>}
+                                {report.clothing?.fabrics && <p><strong className="text-foreground">Tecidos:</strong> <span className="text-muted-foreground font-medium">{report.clothing.fabrics}</span></p>}
+                                {report.clothing?.patterns && <p><strong className="text-foreground">Estampas:</strong> <span className="text-muted-foreground font-medium">{report.clothing.patterns}</span></p>}
+                                {!report.clothing?.suggestions && <p className="text-muted-foreground text-center italic">Consulte o texto da análise completa para detalhes de estilo.</p>}
                             </div>
                         </div>
 
@@ -209,12 +253,13 @@ export default function Report() {
                             <div className="w-14 h-14 rounded-full bg-accent/20 flex items-center justify-center mb-4 text-accent-foreground">
                                 <Brush className="w-7 h-7" />
                             </div>
-                            <h3 className="font-heading font-bold text-xl mb-4 text-foreground">Maquilhagem</h3>
+                            <h3 className="font-heading font-bold text-xl mb-4 text-foreground">Beleza e Maquilhagem</h3>
                             <div className="text-sm text-left space-y-3 w-full">
-                                <p><strong className="text-foreground">Base:</strong> <span className="text-muted-foreground font-medium">{report.makeup?.foundation}</span></p>
-                                <p><strong className="text-foreground">Blush:</strong> <span className="text-muted-foreground font-medium">{report.makeup?.blush}</span></p>
-                                <p><strong className="text-foreground">Lábios:</strong> <span className="text-muted-foreground font-medium">{report.makeup?.lips}</span></p>
-                                <p><strong className="text-foreground">Olhos:</strong> <span className="text-muted-foreground font-medium">{report.makeup?.eyes}</span></p>
+                                {report.makeup?.foundation && <p><strong className="text-foreground">Base:</strong> <span className="text-muted-foreground font-medium">{report.makeup.foundation}</span></p>}
+                                {report.makeup?.blush && <p><strong className="text-foreground">Blush:</strong> <span className="text-muted-foreground font-medium">{report.makeup.blush}</span></p>}
+                                {report.makeup?.lips && <p><strong className="text-foreground">Lábios:</strong> <span className="text-muted-foreground font-medium">{report.makeup.lips}</span></p>}
+                                {report.makeup?.eyes && <p><strong className="text-foreground">Olhos:</strong> <span className="text-muted-foreground font-medium">{report.makeup.eyes}</span></p>}
+                                {!report.makeup?.foundation && <p className="text-muted-foreground text-center italic">Consulte o texto da análise completa para detalhes de beleza.</p>}
                             </div>
                         </div>
 
@@ -222,11 +267,12 @@ export default function Report() {
                             <div className="w-14 h-14 rounded-full bg-secondary flex items-center justify-center mb-4 text-foreground">
                                 <Diamond className="w-7 h-7" />
                             </div>
-                            <h3 className="font-heading font-bold text-xl mb-4 text-foreground">Acessórios</h3>
+                            <h3 className="font-heading font-bold text-xl mb-4 text-foreground">Acessórios e Cores</h3>
                             <div className="text-sm text-left space-y-3 w-full">
-                                <p><strong className="text-foreground">Metais:</strong> <span className="text-muted-foreground font-medium">{report.accessories?.metals}</span></p>
-                                <p><strong className="text-foreground">Pedras:</strong> <span className="text-muted-foreground font-medium">{report.accessories?.stones}</span></p>
-                                <p><strong className="text-foreground">Geral:</strong> <span className="text-muted-foreground font-medium">{report.accessories?.general}</span></p>
+                                {report.accessories?.metals && <p><strong className="text-foreground">Metais:</strong> <span className="text-muted-foreground font-medium">{report.accessories.metals}</span></p>}
+                                {report.accessories?.stones && <p><strong className="text-foreground">Pedras:</strong> <span className="text-muted-foreground font-medium">{report.accessories.stones}</span></p>}
+                                {report.accessories?.general && <p><strong className="text-foreground">Geral:</strong> <span className="text-muted-foreground font-medium">{report.accessories.general}</span></p>}
+                                {!report.accessories?.metals && <p className="text-muted-foreground text-center italic">Consulte o texto da análise completa para detalhes de acessórios.</p>}
                             </div>
                         </div>
                     </section>

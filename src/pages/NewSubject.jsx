@@ -6,7 +6,8 @@ import { useReportsStore } from "../stores/reportsStore";
 import { useConfigStore } from "../stores/configStore";
 import { useTestableClientsStore } from "../stores/testableClientsStore";
 import { supabase } from "../lib/supabase";
-import { analyzeImagesWithVision } from "../lib/visionService";
+import { analyzeWithN8N } from "../lib/visionService";
+import { getSkinTone } from "../lib/perfectCorpService";
 import PhotoUpload from "../components/ui/PhotoUpload";
 import { toast } from "sonner";
 import { Loader2, ArrowLeft, Plus, Users, UserPlus } from "lucide-react";
@@ -241,12 +242,18 @@ export default function NewSubject() {
 
             createdSubjectId = subject.id;
 
-            // Run GPT-4 Vision analysis
-            const aiResult = await analyzeImagesWithVision(photoUrls, aiPrompt);
+            // 1. Run Perfect Corp objective analysis (on first photo)
+            console.log("Solicitando análise de cores objetivas (Tom de Pele, Olhos, Cabelo)...");
+            const skinToneData = await getSkinTone(photoUrls[0]);
 
-            // Save Report
+            // 2. Run analysis via n8n Motor (Fallback included)
+            const aiResult = await analyzeWithN8N(photoUrls, aiPrompt, skinToneData);
+
+            // 3. Save Report
             const reportData = {
                 ...aiResult,
+                skinColorHex: skinToneData?.skin_color || null,
+                skinToneData: skinToneData,
                 subjectId: subject.id,
                 clientId: currentUser.id
             };

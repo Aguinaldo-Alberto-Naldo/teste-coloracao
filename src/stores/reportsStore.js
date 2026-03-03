@@ -45,7 +45,9 @@ export const useReportsStore = create(
                         clothing: data.clothing,
                         makeup: data.makeup,
                         accessories: data.accessories,
-                        full_analysis: data.fullAnalysis
+                        full_analysis: data.fullAnalysis,
+                        skin_color_hex: data.skinColorHex,
+                        skin_tone_data: data.skinToneData
                     }])
                     .select()
                     .single();
